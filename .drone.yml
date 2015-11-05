@@ -1,0 +1,30 @@
+build:
+  image: golang:1.5
+  environment:
+    - GO15VENDOREXPERIMENT=1
+    - GOOS=linux
+    - GOARCH=amd64
+    - CGO_ENABLED=0
+  commands:
+    - go get
+    - go build
+    - go test
+
+publish:
+  docker:
+    username: drone
+    password: $$DOCKER_PASS
+    email: $$DOCKER_EMAIL
+    repo: plugins/drone-git-push
+    when:
+      branch: master
+
+plugin:
+  name: Git Push
+  desc: Pushes to a git repository.
+  type: deploy
+  image: plugins/drone-git-push
+  labels:
+    - deploy
+    - git
+
