@@ -124,7 +124,7 @@ func push(remote, branch string, force bool) *exec.Cmd {
 	cmd := exec.Command(
 		"git",
 		"push",
-		"remote",
+		remote,
 		"HEAD:"+branch,
 	)
 	if force {
