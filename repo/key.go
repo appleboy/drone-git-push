@@ -1,48 +1,48 @@
 package repo
 
 import (
-  "path/filepath"
-  "os/user"
-  "io/ioutil"
-  "os"
+	"io/ioutil"
+	"os"
+	"os/user"
+	"path/filepath"
 
-  "github.com/drone/drone-go/drone"
+	"github.com/drone/drone-go/drone"
 )
 
 func WriteKey(workspace *drone.Workspace) error {
-  if workspace.Keys == nil || len(workspace.Keys.Private) == 0 {
-    return nil
-  }
+	if workspace.Keys == nil || len(workspace.Keys.Private) == 0 {
+		return nil
+	}
 
-  home := "/root"
+	home := "/root"
 
-  if currentUser, err := user.Current(); err == nil {
-    home = currentUser.HomeDir
-  }
+	if currentUser, err := user.Current(); err == nil {
+		home = currentUser.HomeDir
+	}
 
-  sshpath := filepath.Join(
-    home,
-    ".ssh")
+	sshpath := filepath.Join(
+		home,
+		".ssh")
 
-  if err := os.MkdirAll(sshpath, 0700); err != nil {
-    return err
-  }
+	if err := os.MkdirAll(sshpath, 0700); err != nil {
+		return err
+	}
 
-  confpath := filepath.Join(
-    sshpath,
-    "config")
+	confpath := filepath.Join(
+		sshpath,
+		"config")
 
-  privpath := filepath.Join(
-    sshpath,
-    "id_rsa")
+	privpath := filepath.Join(
+		sshpath,
+		"id_rsa")
 
-  ioutil.WriteFile(
-    confpath,
-    []byte("StrictHostKeyChecking no\n"),
-    0700)
+	ioutil.WriteFile(
+		confpath,
+		[]byte("StrictHostKeyChecking no\n"),
+		0700)
 
-  return ioutil.WriteFile(
-    privpath,
-    []byte(workspace.Keys.Private),
-    0600)
+	return ioutil.WriteFile(
+		privpath,
+		[]byte(workspace.Keys.Private),
+		0600)
 }

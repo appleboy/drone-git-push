@@ -1,42 +1,42 @@
 package repo
 
 import (
-  "os/exec"
+	"os/exec"
 )
 
 func RemoteRemove(name string) *exec.Cmd {
-  cmd := exec.Command(
-    "git",
-    "remote",
-    "rm",
-    name)
+	cmd := exec.Command(
+		"git",
+		"remote",
+		"rm",
+		name)
 
-  return cmd
+	return cmd
 }
 
 func RemoteAdd(name, url string) *exec.Cmd {
-  cmd := exec.Command(
-    "git",
-    "remote",
-    "add",
-    name,
-    url)
+	cmd := exec.Command(
+		"git",
+		"remote",
+		"add",
+		name,
+		url)
 
-  return cmd
+	return cmd
 }
 
 func RemotePush(remote, branch string, force bool) *exec.Cmd {
-  cmd := exec.Command(
-    "git",
-    "push",
-    remote,
-    "HEAD:"+branch)
+	cmd := exec.Command(
+		"git",
+		"push",
+		remote,
+		"HEAD:"+branch)
 
-  if force {
-    cmd.Args = append(
-      cmd.Args,
-      "--force")
-  }
+	if force {
+		cmd.Args = append(
+			cmd.Args,
+			"--force")
+	}
 
-  return cmd
+	return cmd
 }

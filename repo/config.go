@@ -1,29 +1,29 @@
 package repo
 
 import (
-  "os/exec"
+	"os/exec"
 
-  "github.com/drone/drone-go/drone"
+	"github.com/drone/drone-go/drone"
 )
 
 func GlobalUser(build *drone.Build) *exec.Cmd {
-  cmd := exec.Command(
-    "git",
-    "config",
-    "--global",
-    "user.email",
-    build.Email)
+	cmd := exec.Command(
+		"git",
+		"config",
+		"--global",
+		"user.email",
+		build.Email)
 
-  return cmd
+	return cmd
 }
 
 func GlobalName(build *drone.Build) *exec.Cmd {
-  cmd := exec.Command(
-    "git",
-    "config",
-    "--global",
-    "user.name",
-    build.Author)
+	cmd := exec.Command(
+		"git",
+		"config",
+		"--global",
+		"user.name",
+		build.Author)
 
-  return cmd
+	return cmd
 }

@@ -1,16 +1,16 @@
 package repo
 
 import (
-  "os/exec"
+	"os/exec"
 )
 
 func SkipVerify() *exec.Cmd {
-  cmd := exec.Command(
-    "git",
-    "config",
-    "--global",
-    "http.sslVerify",
-    "false")
+	cmd := exec.Command(
+		"git",
+		"config",
+		"--global",
+		"http.sslVerify",
+		"false")
 
-  return cmd
+	return cmd
 }

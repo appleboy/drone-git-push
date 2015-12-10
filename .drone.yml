@@ -1,14 +1,9 @@
 build:
   image: golang:1.5
-  environment:
-    - GO15VENDOREXPERIMENT=1
-    - GOOS=linux
-    - GOARCH=amd64
-    - CGO_ENABLED=0
   commands:
-    - go get
-    - go build
-    - go test
+    - make deps
+    - make build
+    - make test
 
 publish:
   docker:
@@ -21,10 +16,8 @@ publish:
 
 plugin:
   name: Git Push
-  desc: Pushes to a git repository.
+  desc: Deploys or updates a project via Git
   type: deploy
   image: plugins/drone-git-push
   labels:
-    - deploy
     - git
-
