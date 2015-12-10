@@ -4,7 +4,7 @@ Drone plugin for deploying via Git
 
 ## Usage
 
-```
+```sh
 ./drone-git-push <<EOF
 {
     "repo": {
@@ -22,6 +22,9 @@ Drone plugin for deploying via Git
         "path": "/drone/src/github.com/drone/drone"
     },
     "vargs": {
+        "branch": "master",
+        "remote": "git@git.heroku.com:falling-wind-1624.git",
+        "force: false"
     }
 }
 EOF
@@ -31,7 +34,7 @@ EOF
 
 Build the Docker container using `make`:
 
-```
+```sh
 make deps build
 docker build --rm=true -t plugins/drone-git-push .
 ```
@@ -56,6 +59,9 @@ docker run -i plugins/drone-git-push <<EOF
         "path": "/drone/src/github.com/drone/drone"
     },
     "vargs": {
+        "branch": "master",
+        "remote": "git@git.heroku.com:falling-wind-1624.git",
+        "force: false"
     }
 }
 EOF
