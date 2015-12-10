@@ -1,12 +1,16 @@
 > This plugin has not been fully tested. Proceed with caution.
 
-Use this plugin to `git push` to a repository at the end of a successful build. Use the following parameters to configure this plugin:
+Use this plugin for deplying an application via `git push`. You can override
+the default configuration with the following parameters:
 
-* `remote` - push to this remote repository
-* `branch` - push to this remote branch
-* `force` - force push using the `--force` flag
+* `remote` - Target remote repository
+* `branch` - Target remote branch, defaults to master
+* `force` - Force push using the `--force` flag, defaults to false
+* `skip_verify` - Skip verification of HTTPS certs, defaults to false
 
-Example configuration in the `.drone.yml` file:
+## Example
+
+The following is a sample configuration in your .drone.yml file:
 
 ```yaml
 deploy:
