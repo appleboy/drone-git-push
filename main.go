@@ -39,8 +39,6 @@ func main() {
 }
 
 func run(workspace *drone.Workspace, build *drone.Build, vargs *Params) error {
-	var err error
-
 	repo.GlobalName(build).Run()
 	repo.GlobalUser(build).Run()
 
@@ -48,35 +46,22 @@ func run(workspace *drone.Workspace, build *drone.Build, vargs *Params) error {
 		repo.SkipVerify().Run()
 	}
 
-	err = repo.WriteKey(workspace)
-
-	if err != nil {
+	if err := repo.WriteKey(workspace); err != nil {
 		return err
 	}
 
 	defer func() {
-		cmd := repo.RemoteRemove(
-			"deploy")
-
-		cmd.Dir = workspace.Path
-		cmd.Stderr = os.Stderr
-		cmd.Stdin = os.Stdin
-		cmd.Run()
+		execute(
+			repo.RemoteRemove(
+				"deploy"),
+			workspace)
 	}()
 
 	cmd := repo.RemoteAdd(
 		"deploy",
 		vargs.Remote)
 
-	trace(cmd)
-
-	cmd.Dir = workspace.Path
-	cmd.Stderr = os.Stderr
-	cmd.Stdin = os.Stdin
-
-	err = cmd.Run()
-
-	if err != nil {
+	if err := execute(cmd, workspace); err != nil {
 		return err
 	}
 
@@ -85,19 +70,21 @@ func run(workspace *drone.Workspace, build *drone.Build, vargs *Params) error {
 		vargs.Branch,
 		vargs.Force)
 
+	if err := execute(cmd, workspace); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func execute(cmd *exec.Cmd, workspace *drone.Workspace) error {
 	trace(cmd)
 
 	cmd.Dir = workspace.Path
 	cmd.Stderr = os.Stderr
 	cmd.Stdin = os.Stdin
 
-	err = cmd.Run()
-
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return cmd.Run()
 }
 
 func trace(cmd *exec.Cmd) {
