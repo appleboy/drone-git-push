@@ -1,35 +1,50 @@
 build:
   image: golang:1.5
+  environment:
+    - CGO_ENABLED=0
   commands:
     - make deps
+    - make vet
     - make build
     - make test
 
 publish:
+  coverage:
+    when:
+      branch: master
   docker:
-    username: drone
+    username: $$DOCKER_USER
     password: $$DOCKER_PASS
     email: $$DOCKER_EMAIL
     repo: plugins/drone-git-push
+    tag: latest
     when:
       branch: master
+  docker:
+    username: $$DOCKER_USER
+    password: $$DOCKER_PASS
+    email: $$DOCKER_EMAIL
+    repo: plugins/drone-git-push
+    tag: develop
+    when:
+      branch: develop
 
 notify:
   downstream:
     token: $$DOWNSTREAM_TOKEN
     repositories:
       - drone-plugins/drone-azure-web-apps
+      - drone-plugins/drone-cloudcontrol
       - drone-plugins/drone-deis
+      - drone-olugins/drone-dotcloud
       - drone-plugins/drone-heroku
       - drone-plugins/drone-scalingo
     when:
-      event: push
       branch: master
-      success: true
 
 plugin:
   name: Git Push
-  desc: Deploys or updates a project via Git
+  desc: Deploy or update a project via Git
   type: deploy
   image: plugins/drone-git-push
   labels:
