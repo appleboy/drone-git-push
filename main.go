@@ -12,7 +12,6 @@ import (
 )
 
 var (
-	build     string
 	buildDate string
 )
 
