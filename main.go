@@ -12,11 +12,11 @@ import (
 )
 
 var (
-	buildDate string
+	buildCommit string
 )
 
 func main() {
-	fmt.Printf("Drone Git Push Plugin built at %s\n", buildDate)
+	fmt.Printf("Drone Git Push Plugin built from %s\n", buildCommit)
 
 	workspace := drone.Workspace{}
 	build := drone.Build{}
