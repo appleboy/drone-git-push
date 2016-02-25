@@ -4,7 +4,7 @@
 [![Coverage Status](https://aircover.co/badges/drone-plugins/drone-git-push/coverage.svg)](https://aircover.co/drone-plugins/drone-git-push)
 [![](https://badge.imagelayers.io/plugins/drone-git-push:latest.svg)](https://imagelayers.io/?images=plugins/drone-git-push:latest 'Get your own badge on imagelayers.io')
 
-Drone plugin to git push
+Drone plugin to push changes to a remote `git` repository. For the usage information and a listing of the available options please take a look at [the docs](DOCS.md).
 
 ## Binary
 
