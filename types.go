@@ -5,5 +5,5 @@ type Params struct {
 	Branch     string `json:"branch"`
 	Force      bool   `json:"force"`
 	SkipVerify bool   `json:"skip_verify"`
-    Commit     bool   `json:"commit"`
+	Commit     bool   `json:"commit"`
 }
