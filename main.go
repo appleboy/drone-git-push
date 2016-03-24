@@ -64,14 +64,12 @@ func run(workspace *drone.Workspace, build *drone.Build, vargs *Params) error {
 		return err
 	}
 
-	if vargs.Add {
+	if vargs.Commit {
 		cmd = repo.ForceAdd()
 		if err := execute(cmd, workspace); err != nil {
 			return err
 		}
-	}
 
-	if vargs.Commit {
 		cmd = repo.ForceCommit()
 		if err := execute(cmd, workspace); err != nil {
 			return err
