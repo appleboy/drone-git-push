@@ -64,6 +64,18 @@ func run(workspace *drone.Workspace, build *drone.Build, vargs *Params) error {
 		return err
 	}
 
+	if vargs.Commit {
+		cmd = repo.ForceAdd()
+		if err := execute(cmd, workspace); err != nil {
+			return err
+		}
+
+		cmd = repo.ForceCommit()
+		if err := execute(cmd, workspace); err != nil {
+			return err
+		}
+	}
+
 	cmd = repo.RemotePush(
 		"deploy",
 		vargs.Branch,

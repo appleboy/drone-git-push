@@ -7,6 +7,7 @@ the default configuration with the following parameters:
 * `branch` - Target remote branch, defaults to master
 * `force` - Force push using the `--force` flag, defaults to false
 * `skip_verify` - Skip verification of HTTPS certs, defaults to false
+* `commit` - Add and commit the contents of the repo before pushing, defaults to false
 
 ## Example
 
@@ -18,4 +19,5 @@ deploy:
     branch: master
     remote: git@git.heroku.com:falling-wind-1624.git
     force: false
+    commit: true
 ```
