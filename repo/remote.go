@@ -26,11 +26,15 @@ func RemoteAdd(name, url string) *exec.Cmd {
 }
 
 func RemotePush(remote, branch string, force bool) *exec.Cmd {
+	return RemotePushNamedBranch(remote, "HEAD", branch, force)
+}
+
+func RemotePushNamedBranch(remote, localbranch string, branch string, force bool) *exec.Cmd {
 	cmd := exec.Command(
 		"git",
 		"push",
 		remote,
-		"HEAD:"+branch)
+		localbranch+":"+branch)
 
 	if force {
 		cmd.Args = append(

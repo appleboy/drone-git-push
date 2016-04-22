@@ -15,6 +15,11 @@ var (
 	buildCommit string
 )
 
+const (
+	DefaultRemoteName = "deploy"
+	DefaultLocalRef   = "HEAD"
+)
+
 func main() {
 	fmt.Printf("Drone Git Push Plugin built from %s\n", buildCommit)
 
@@ -49,23 +54,37 @@ func run(workspace *drone.Workspace, build *drone.Build, vargs *Params) error {
 		return err
 	}
 
-	defer func() {
-		execute(
-			repo.RemoteRemove(
-				"deploy"),
-			workspace)
-	}()
-
-	cmd := repo.RemoteAdd(
-		"deploy",
-		vargs.Remote)
-
-	if err := execute(cmd, workspace); err != nil {
+	if err := repo.WriteNetrc(workspace); err != nil {
 		return err
 	}
 
+	if vargs.RemoteName == "" {
+		vargs.RemoteName = DefaultRemoteName
+	}
+
+	if vargs.LocalBranch == "" {
+		vargs.LocalBranch = DefaultLocalRef
+	}
+
+	if vargs.Remote != "" {
+		cmd := repo.RemoteAdd(
+			vargs.RemoteName,
+			vargs.Remote)
+
+		if err := execute(cmd, workspace); err != nil {
+			return err
+		}
+
+		defer func() {
+			execute(
+				repo.RemoteRemove(
+					vargs.RemoteName),
+				workspace)
+		}()
+	}
+
 	if vargs.Commit {
-		cmd = repo.ForceAdd()
+		cmd := repo.ForceAdd()
 		if err := execute(cmd, workspace); err != nil {
 			return err
 		}
@@ -76,8 +95,9 @@ func run(workspace *drone.Workspace, build *drone.Build, vargs *Params) error {
 		}
 	}
 
-	cmd = repo.RemotePush(
-		"deploy",
+	cmd := repo.RemotePushNamedBranch(
+		vargs.RemoteName,
+		vargs.LocalBranch,
 		vargs.Branch,
 		vargs.Force)
 
