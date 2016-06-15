@@ -1,0 +1,11 @@
+vendors:
+- path: github.com/drone/drone-go
+  rev: eaa41f7836a191224ec5702d2458db07882ec269
+- path: github.com/golang/protobuf
+  rev: 0c1f6d65b5a189c2250d10e71a5506f06f9fa0a0
+- path: golang.org/x/net
+  rev: 3f122ce3dbbe488b7e6a8bdb26f41edec852a40b
+- path: golang.org/x/oauth2
+  rev: 65a8d08c6292395d47053be10b3c5e91960def76
+- path: google.golang.org/appengine
+  rev: 7f59a8c76b8594d06044bfe0bcbe475cb2020482
