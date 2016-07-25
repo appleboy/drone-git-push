@@ -1,103 +1,53 @@
 # drone-git-push
 
 [![Build Status](http://beta.drone.io/api/badges/drone-plugins/drone-git-push/status.svg)](http://beta.drone.io/drone-plugins/drone-git-push)
-[![Coverage Status](https://aircover.co/badges/drone-plugins/drone-git-push/coverage.svg)](https://aircover.co/drone-plugins/drone-git-push)
-[![](https://badge.imagelayers.io/plugins/drone-git-push:latest.svg)](https://imagelayers.io/?images=plugins/drone-git-push:latest 'Get your own badge on imagelayers.io')
+[![Go Doc](https://godoc.org/github.com/drone-plugins/drone-git-push?status.svg)](http://godoc.org/github.com/drone-plugins/drone-git-push)
+[![Go Report](https://goreportcard.com/badge/github.com/drone-plugins/drone-git-push)](https://goreportcard.com/report/github.com/drone-plugins/drone-git-push)
+[![Join the chat at https://gitter.im/drone/drone](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/drone/drone)
 
-Drone plugin to push changes to a remote `git` repository. For the usage information and a listing of the available options please take a look at [the docs](DOCS.md).
+Drone plugin to push changes to a remote `git` repository. For the usage
+information and a listing of the available options please take a look at
+[the docs](DOCS.md).
 
-## Binary
+## Build
 
-Build the binary using `make`:
+Build the binary with the following commands:
 
 ```
-make deps build
-```
-
-### Example
-
-```sh
-./drone-git-push <<EOF
-{
-    "repo": {
-        "clone_url": "git://github.com/drone/drone",
-        "owner": "drone",
-        "name": "drone",
-        "full_name": "drone/drone"
-    },
-    "system": {
-        "link_url": "https://beta.drone.io"
-    },
-    "build": {
-        "number": 22,
-        "status": "success",
-        "started_at": 1421029603,
-        "finished_at": 1421029813,
-        "message": "Update the Readme",
-        "author": "johnsmith",
-        "author_email": "john.smith@gmail.com"
-        "event": "push",
-        "branch": "master",
-        "commit": "436b7a6e2abaddfd35740527353e78a227ddcb2c",
-        "ref": "refs/heads/master"
-    },
-    "workspace": {
-        "root": "/drone/src",
-        "path": "/drone/src/github.com/drone/drone"
-    },
-    "vargs": {
-        "branch": "master",
-        "remote": "git@git.heroku.com:falling-wind-1624.git",
-        "force: false
-    }
-}
-EOF
+go build
+go test
 ```
 
 ## Docker
 
-Build the container using `make`:
+Build the docker image with the following commands:
 
 ```
-make deps docker
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -tags netgo
+docker build --rm=true -t plugins/ssh .
 ```
 
-### Example
+Please note incorrectly building the image for the correct x64 linux and with
+GCO disabled will result in an error when running the Docker image:
+
+```
+docker: Error response from daemon: Container command
+'/bin/drone-git-push' not found or does not exist..
+```
+
+## Usage
+
+Execute from the working directory:
 
 ```sh
-docker run -i plugins/drone-git-push <<EOF
-{
-    "repo": {
-        "clone_url": "git://github.com/drone/drone",
-        "owner": "drone",
-        "name": "drone",
-        "full_name": "drone/drone"
-    },
-    "system": {
-        "link_url": "https://beta.drone.io"
-    },
-    "build": {
-        "number": 22,
-        "status": "success",
-        "started_at": 1421029603,
-        "finished_at": 1421029813,
-        "message": "Update the Readme",
-        "author": "johnsmith",
-        "author_email": "john.smith@gmail.com"
-        "event": "push",
-        "branch": "master",
-        "commit": "436b7a6e2abaddfd35740527353e78a227ddcb2c",
-        "ref": "refs/heads/master"
-    },
-    "workspace": {
-        "root": "/drone/src",
-        "path": "/drone/src/github.com/drone/drone"
-    },
-    "vargs": {
-        "branch": "master",
-        "remote": "git@git.heroku.com:falling-wind-1624.git",
-        "force: false
-    }
-}
-EOF
+docker run --rm \
+  -e DRONE_COMMIT_AUTHOR=Octocat \
+  -e DRONE_COMMIT_AUTHOR_EMAIL=octocat@github.com \
+  -e PLUGIN_SSH_KEY=${HOME}/.ssh/id_rsa \
+  -e PLUGIN_BRANCH=master \
+  -e PLUGIN_REMOTE=git@github.com:foo/bar.git \
+  -e PLUGIN_FORCE=false \
+  -v $(pwd)/$(pwd) \
+  -w $(pwd) \
+  plugins/git-push
 ```

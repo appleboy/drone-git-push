@@ -4,6 +4,7 @@ import (
 	"os/exec"
 )
 
+// ForceAdd forces the addition of all dirty files.
 func ForceAdd() *exec.Cmd {
 	cmd := exec.Command(
 		"git",
@@ -14,11 +15,12 @@ func ForceAdd() *exec.Cmd {
 	return cmd
 }
 
+// ForceCommit commits every change while skipping CI.
 func ForceCommit() *exec.Cmd {
 	cmd := exec.Command(
 		"git",
 		"commit",
-		"-m '[skip ci] Commit dirty state'") // skip the CI build since this commit was triggered by the build system, not by a user
+		"-m '[skip ci] Commit dirty state'")
 
 	return cmd
 }

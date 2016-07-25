@@ -6,8 +6,6 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
-
-	"github.com/drone/drone-go/drone"
 )
 
 const netrcFile = `
@@ -16,8 +14,9 @@ login %s
 password %s
 `
 
-func WriteKey(workspace *drone.Workspace) error {
-	if workspace.Keys == nil || len(workspace.Keys.Private) == 0 {
+// WriteKey writes the private key.
+func WriteKey(privateKey string) error {
+	if privateKey == "" {
 		return nil
 	}
 
@@ -50,26 +49,35 @@ func WriteKey(workspace *drone.Workspace) error {
 
 	return ioutil.WriteFile(
 		privpath,
-		[]byte(workspace.Keys.Private),
+		[]byte(privateKey),
 		0600)
 }
 
-// Writes the netrc file.
-func WriteNetrc(in *drone.Workspace) error {
-	if in.Netrc == nil || len(in.Netrc.Machine) == 0 {
+// WriteNetrc writes the netrc file.
+func WriteNetrc(machine, login, password string) error {
+	if machine == "" {
 		return nil
 	}
-	out := fmt.Sprintf(
+
+	netrcContent := fmt.Sprintf(
 		netrcFile,
-		in.Netrc.Machine,
-		in.Netrc.Login,
-		in.Netrc.Password,
+		machine,
+		login,
+		password,
 	)
+
 	home := "/root"
-	u, err := user.Current()
-	if err == nil {
-		home = u.HomeDir
+
+	if currentUser, err := user.Current(); err == nil {
+		home = currentUser.HomeDir
 	}
-	path := filepath.Join(home, ".netrc")
-	return ioutil.WriteFile(path, []byte(out), 0600)
+
+	netpath := filepath.Join(
+		home,
+		".netrc")
+
+	return ioutil.WriteFile(
+		netpath,
+		[]byte(netrcContent),
+		0600)
 }
