@@ -1,123 +1,132 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"os"
-	"os/exec"
-	"strings"
 
-	"github.com/drone-plugins/drone-git-push/repo"
-	"github.com/drone/drone-go/drone"
-	"github.com/drone/drone-go/plugin"
+	"github.com/joho/godotenv"
+	"github.com/urfave/cli"
 )
 
-var (
-	buildCommit string
-)
-
-const (
-	DefaultRemoteName = "deploy"
-	DefaultLocalRef   = "HEAD"
-)
+var version string // build number set at compile-time
 
 func main() {
-	fmt.Printf("Drone Git Push Plugin built from %s\n", buildCommit)
+	app := cli.NewApp()
+	app.Name = "git-push plugin"
+	app.Usage = "git-push plugin"
+	app.Action = run
+	app.Version = version
+	app.Flags = []cli.Flag{
+		cli.StringFlag{
+			Name:   "commit.author.name",
+			Usage:  "git author name",
+			EnvVar: "DRONE_COMMIT_AUTHOR",
+		},
+		cli.StringFlag{
+			Name:   "commit.author.email",
+			Usage:  "git author email",
+			EnvVar: "DRONE_COMMIT_AUTHOR_EMAIL",
+		},
 
-	workspace := drone.Workspace{}
-	build := drone.Build{}
-	vargs := Params{}
+		cli.StringFlag{
+			Name:   "netrc.machine",
+			Usage:  "netrc machine",
+			EnvVar: "DRONE_NETRC_MACHINE",
+		},
+		cli.StringFlag{
+			Name:   "netrc.username",
+			Usage:  "netrc username",
+			EnvVar: "DRONE_NETRC_USERNAME",
+		},
+		cli.StringFlag{
+			Name:   "netrc.password",
+			Usage:  "netrc password",
+			EnvVar: "DRONE_NETRC_PASSWORD",
+		},
 
-	plugin.Param("workspace", &workspace)
-	plugin.Param("build", &build)
-	plugin.Param("vargs", &vargs)
-	plugin.MustParse()
+		cli.StringFlag{
+			Name:   "ssh-key",
+			Usage:  "private ssh key",
+			EnvVar: "PLUGIN_SSH_KEY,GIT_PUSH_SSH_KEY",
+		},
+		cli.StringFlag{
+			Name:   "remote",
+			Usage:  "url of the remote repo",
+			EnvVar: "PLUGIN_REMOTE,GIT_PUSH_REMOTE",
+		},
+		cli.StringFlag{
+			Name:   "remote-name",
+			Usage:  "name of the remote repo",
+			Value:  "deploy",
+			EnvVar: "PLUGIN_REMOTE_NAME,GIT_PUSH_REMOTE_NAME",
+		},
+		cli.StringFlag{
+			Name:   "branch",
+			Usage:  "name of remote branch",
+			EnvVar: "PLUGIN_BRANCH,GIT_PUSH_BRANCH",
+		},
+		cli.StringFlag{
+			Name:   "local-branch",
+			Usage:  "name of local branch",
+			Value:  "HEAD",
+			EnvVar: "PLUGIN_LOCAL_BRANCH,GIT_PUSH_LOCAL_BRANCH",
+		},
+		cli.BoolFlag{
+			Name:   "force",
+			Usage:  "force push to remote",
+			EnvVar: "PLUGIN_FORCE,GIT_PUSH_FORCE",
+		},
+		cli.BoolFlag{
+			Name:   "skip-verify",
+			Usage:  "skip ssl verification",
+			EnvVar: "PLUGIN_SKIP_VERIFY,GIT_PUSH_SKIP_VERIFY",
+		},
+		cli.BoolFlag{
+			Name:   "commit",
+			Usage:  "commit dirty changes",
+			EnvVar: "PLUGIN_COMMIT,GIT_PUSH_COMMIT",
+		},
+		cli.StringFlag{
+			Name:  "env-file",
+			Usage: "source env file",
+		},
+	}
 
-	err := run(&workspace, &build, &vargs)
-
-	if err != nil {
-		fmt.Println(err)
-
-		os.Exit(1)
-		return
+	if err := app.Run(os.Args); err != nil {
+		log.Fatal(err)
 	}
 }
 
-func run(workspace *drone.Workspace, build *drone.Build, vargs *Params) error {
-	repo.GlobalName(build).Run()
-	repo.GlobalUser(build).Run()
-
-	if vargs.SkipVerify {
-		repo.SkipVerify().Run()
+func run(c *cli.Context) error {
+	if c.String("env-file") != "" {
+		_ = godotenv.Load(c.String("env-file"))
 	}
 
-	if err := repo.WriteKey(workspace); err != nil {
-		return err
+	plugin := Plugin{
+		Netrc: Netrc{
+			Login:    c.String("netrc.username"),
+			Machine:  c.String("netrc.machine"),
+			Password: c.String("netrc.password"),
+		},
+
+		Commit: Commit{
+			Author: Author{
+				Name:  c.String("commit.author.name"),
+				Email: c.String("commit.author.email"),
+			},
+		},
+
+		Config: Config{
+			Key:         c.String("ssh-key"),
+			Remote:      c.String("remote"),
+			RemoteName:  c.String("remote-name"),
+			Branch:      c.String("branch"),
+			LocalBranch: c.String("local-branch"),
+			Force:       c.Bool("force"),
+			SkipVerify:  c.Bool("skip-verify"),
+			Commit:      c.Bool("commit"),
+		},
 	}
 
-	if err := repo.WriteNetrc(workspace); err != nil {
-		return err
-	}
-
-	if vargs.RemoteName == "" {
-		vargs.RemoteName = DefaultRemoteName
-	}
-
-	if vargs.LocalBranch == "" {
-		vargs.LocalBranch = DefaultLocalRef
-	}
-
-	if vargs.Remote != "" {
-		cmd := repo.RemoteAdd(
-			vargs.RemoteName,
-			vargs.Remote)
-
-		if err := execute(cmd, workspace); err != nil {
-			return err
-		}
-
-		defer func() {
-			execute(
-				repo.RemoteRemove(
-					vargs.RemoteName),
-				workspace)
-		}()
-	}
-
-	if vargs.Commit {
-		cmd := repo.ForceAdd()
-		if err := execute(cmd, workspace); err != nil {
-			return err
-		}
-
-		cmd = repo.ForceCommit()
-		if err := execute(cmd, workspace); err != nil {
-			return err
-		}
-	}
-
-	cmd := repo.RemotePushNamedBranch(
-		vargs.RemoteName,
-		vargs.LocalBranch,
-		vargs.Branch,
-		vargs.Force)
-
-	if err := execute(cmd, workspace); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func execute(cmd *exec.Cmd, workspace *drone.Workspace) error {
-	trace(cmd)
-
-	cmd.Dir = workspace.Path
-	cmd.Stderr = os.Stderr
-	cmd.Stdin = os.Stdin
-
-	return cmd.Run()
-}
-
-func trace(cmd *exec.Cmd) {
-	fmt.Println("$", strings.Join(cmd.Args, " "))
+	return plugin.Exec()
 }

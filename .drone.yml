@@ -1,46 +1,23 @@
-build:
-  image: golang:1.5
-  environment:
-    - CGO_ENABLED=0
-  commands:
-    - make deps
-    - make vet
-    - make build
-    - make test
+workspace:
+  base: /go
 
-publish:
-  coverage:
-    when:
-      branch: master
-  docker:
-    username: $$DOCKER_USER
-    password: $$DOCKER_PASS
-    email: $$DOCKER_EMAIL
-    repo: plugins/drone-git-push
-    tag: latest
-    when:
-      branch: master
-  docker:
-    username: $$DOCKER_USER
-    password: $$DOCKER_PASS
-    email: $$DOCKER_EMAIL
-    repo: plugins/drone-git-push
-    tag: develop
-    when:
-      branch: develop
+pipeline:
+  test:
+    image: golang:1.6
+    environment:
+      - CGO_ENABLED=0
+    commands:
+      - go vet
+      - go test -cover -coverprofile=coverage.out
+      - go build -ldflags "-s -w -X main.build=$DRONE_BUILD_NUMBER" -a -tags netgo
 
-notify:
-  downstream:
-    token: $$DOWNSTREAM_TOKEN
-    repositories:
-      - drone-plugins/drone-azure-web-apps
-      - drone-plugins/drone-cloudcontrol
-      - drone-plugins/drone-deis
-      - drone-olugins/drone-dotcloud
-      - drone-plugins/drone-heroku
-      - drone-plugins/drone-scalingo
+  latest:
+    image: docker
+    repo: plugins/git-push
+    tags: [ "latest", "1.0", "1" ]
     when:
       branch: master
+      event: push
 
 plugin:
   name: Git Push
