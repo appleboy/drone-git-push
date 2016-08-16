@@ -23,6 +23,6 @@ plugin:
   name: Git Push
   desc: Deploy or update a project via Git
   type: deploy
-  image: plugins/drone-git-push
+  image: plugins/git-push
   labels:
     - git
