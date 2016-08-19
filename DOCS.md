@@ -23,7 +23,7 @@ It is highly recommended to put the **GIT_PUSH_SSH_KEY** into a secret so it is
 not exposed to users. This can be done using the drone-cli.
 
 ```bash
-drone secret add --image=git-push \
+drone secret add --image=plugins/git-push \
     octocat/hello-world GIT_PUSH_SSH_KEY @path/to/.ssh/id_rsa
 ```
 
@@ -43,6 +43,7 @@ The following is a sample configuration in your .drone.yml file:
 ```yaml
 pipeline:
   git_push:
+    image: plugins/git-push
     branch: master
     remote: git@git.heroku.com:falling-wind-1624.git
     force: false
@@ -54,6 +55,7 @@ An example of pushing a branch back to the current repository:
 ```yaml
 pipeline:
   git_push:
+    image: plugins/git-push
     remote_name: origin
     branch: gh-pages
     local_ref: gh-pages
