@@ -13,7 +13,7 @@ var version string // build number set at compile-time
 func main() {
 	app := cli.NewApp()
 	app.Name = "git-push plugin"
-	app.Usage = "git-tpush plugin"
+	app.Usage = "git-push plugin"
 	app.Action = run
 	app.Version = version
 	app.Flags = []cli.Flag{
