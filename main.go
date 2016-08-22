@@ -1,9 +1,9 @@
 package main
 
 import (
-	"log"
 	"os"
 
+	"github.com/Sirupsen/logrus"
 	"github.com/joho/godotenv"
 	"github.com/urfave/cli"
 )
@@ -13,7 +13,7 @@ var version string // build number set at compile-time
 func main() {
 	app := cli.NewApp()
 	app.Name = "git-push plugin"
-	app.Usage = "git-push plugin"
+	app.Usage = "git-tpush plugin"
 	app.Action = run
 	app.Version = version
 	app.Flags = []cli.Flag{
@@ -43,7 +43,6 @@ func main() {
 			Usage:  "netrc password",
 			EnvVar: "DRONE_NETRC_PASSWORD",
 		},
-
 		cli.StringFlag{
 			Name:   "ssh-key",
 			Usage:  "private ssh key",
@@ -93,7 +92,7 @@ func main() {
 	}
 
 	if err := app.Run(os.Args); err != nil {
-		log.Fatal(err)
+		logrus.Fatal(err)
 	}
 }
 
@@ -108,14 +107,12 @@ func run(c *cli.Context) error {
 			Machine:  c.String("netrc.machine"),
 			Password: c.String("netrc.password"),
 		},
-
 		Commit: Commit{
 			Author: Author{
 				Name:  c.String("commit.author.name"),
 				Email: c.String("commit.author.email"),
 			},
 		},
-
 		Config: Config{
 			Key:         c.String("ssh-key"),
 			Remote:      c.String("remote"),
