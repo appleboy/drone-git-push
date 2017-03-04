@@ -1,4 +1,4 @@
-Use this plugin for deplying an application via `git push`. You will need to
+Use this plugin for deploying an application via `git push`. You will need to
 supply Drone with a private SSH key or use the same credentials as the cloned
 repo to being able to push changes.
 
