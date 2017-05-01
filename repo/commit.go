@@ -20,33 +20,29 @@ func ForceAdd() *exec.Cmd {
 
 // EmptyCommit simply create an empty commit
 func EmptyCommit(msg string) *exec.Cmd {
-	commitMessage := defaultCommitMessage
-
-	if msg != "" {
-		commitMessage = msg
+	if msg == "" {
+		msg = defaultCommitMessage
 	}
 
 	cmd := exec.Command(
 		"git",
 		"commit",
 		"--allow-empty",
-		fmt.Sprintf("-m '%s'", commitMessage))
+		fmt.Sprintf("-m '%s'", msg))
 
 	return cmd
 }
 
 // ForceCommit commits every change while skipping CI.
 func ForceCommit(msg string) *exec.Cmd {
-	commitMessage := defaultCommitMessage
-
-	if msg != "" {
-		commitMessage = msg
+	if msg == "" {
+		msg = defaultCommitMessage
 	}
 
 	cmd := exec.Command(
 		"git",
 		"commit",
-		fmt.Sprintf("-m '%s'", commitMessage))
+		fmt.Sprintf("-m '%s'", msg))
 
 	return cmd
 }
