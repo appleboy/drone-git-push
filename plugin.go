@@ -21,14 +21,16 @@ type (
 	}
 
 	Config struct {
-		Key         string
-		Remote      string
-		RemoteName  string
-		Branch      string
-		LocalBranch string
-		Force       bool
-		SkipVerify  bool
-		Commit      bool
+		Key           string
+		Remote        string
+		RemoteName    string
+		Branch        string
+		LocalBranch   string
+		Force         bool
+		SkipVerify    bool
+		Commit        bool
+		CommitMessage string
+		EmptyCommit   bool
 	}
 
 	Plugin struct {
@@ -120,12 +122,18 @@ func (p Plugin) HandleRemote() error {
 // HandleCommit commits dirty changes if required.
 func (p Plugin) HandleCommit() error {
 	if p.Config.Commit {
-		if err := execute(repo.ForceAdd()); err != nil {
-			return err
-		}
+		if p.Config.EmptyCommit {
+			if err := execute(repo.EmptyCommit(p.Config.CommitMessage)); err != nil {
+				return err
+			}
+		} else {
+			if err := execute(repo.ForceAdd()); err != nil {
+				return err
+			}
 
-		if err := execute(repo.ForceCommit()); err != nil {
-			return err
+			if err := execute(repo.ForceCommit(p.Config.CommitMessage)); err != nil {
+				return err
+			}
 		}
 	}
 
