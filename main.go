@@ -87,6 +87,16 @@ func main() {
 			EnvVar: "PLUGIN_COMMIT,GIT_PUSH_COMMIT",
 		},
 		cli.StringFlag{
+			Name:   "commit-message",
+			Usage:  "commit message",
+			EnvVar: "PLUGIN_COMMIT_MESSAGE,GIT_PUSH_COMMIT_MESSAGE",
+		},
+		cli.BoolFlag{
+			Name:   "empty-commit",
+			Usage:  "empty commit",
+			EnvVar: "PLUGIN_EMPTY_COMMIT,GIT_PUSH_EMPTY_COMMIT",
+		},
+		cli.StringFlag{
 			Name:  "env-file",
 			Usage: "source env file",
 		},
@@ -115,14 +125,16 @@ func run(c *cli.Context) error {
 			},
 		},
 		Config: Config{
-			Key:         c.String("ssh-key"),
-			Remote:      c.String("remote"),
-			RemoteName:  c.String("remote-name"),
-			Branch:      c.String("branch"),
-			LocalBranch: c.String("local-branch"),
-			Force:       c.Bool("force"),
-			SkipVerify:  c.Bool("skip-verify"),
-			Commit:      c.Bool("commit"),
+			Key:           c.String("ssh-key"),
+			Remote:        c.String("remote"),
+			RemoteName:    c.String("remote-name"),
+			Branch:        c.String("branch"),
+			LocalBranch:   c.String("local-branch"),
+			Force:         c.Bool("force"),
+			SkipVerify:    c.Bool("skip-verify"),
+			Commit:        c.Bool("commit"),
+			CommitMessage: c.String("commit-message"),
+			EmptyCommit:   c.Bool("empty-commit"),
 		},
 	}
 

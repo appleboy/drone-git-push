@@ -14,6 +14,8 @@ The following parameters are used to configure the plugin:
 * **force** - force push using the `--force` flag, defaults to false
 * **skip_verify** - skip verification of HTTPS certs, defaults to false
 * **commit** - add and commit the contents of the repo before pushing, defaults to false
+* **commit_message** - add a custom message for commit, if it is omitted, it will be `[skip ci] Commit dirty state`
+* **empty_commit** - if you only want generate an empty commit, you can do it using this option
 
 The following secret values can be set to configure the plugin.
 
