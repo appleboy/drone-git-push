@@ -134,7 +134,7 @@ func run(c *cli.Context) error {
 			SkipVerify:    c.Bool("skip-verify"),
 			Commit:        c.Bool("commit"),
 			CommitMessage: c.String("commit-message"),
-			EmptyCommit:   C.Bool("empty-commit"),
+			EmptyCommit:   c.Bool("empty-commit"),
 		},
 	}
 
