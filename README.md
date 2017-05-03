@@ -1,8 +1,8 @@
 # drone-git-push
 
-[![Build Status](http://beta.drone.io/api/badges/drone-plugins/drone-git-push/status.svg)](http://beta.drone.io/drone-plugins/drone-git-push)
-[![Go Doc](https://godoc.org/github.com/drone-plugins/drone-git-push?status.svg)](http://godoc.org/github.com/drone-plugins/drone-git-push)
-[![Go Report](https://goreportcard.com/badge/github.com/drone-plugins/drone-git-push)](https://goreportcard.com/report/github.com/drone-plugins/drone-git-push)
+[![Build Status](http://drone.wu-boy.com/api/badges/appleboy/drone-git-push/status.svg)](http://beta.drone.io/appleboy/drone-git-push)
+[![Go Doc](https://godoc.org/github.com/appleboy/drone-git-push?status.svg)](http://godoc.org/github.com/appleboy/drone-git-push)
+[![Go Report](https://goreportcard.com/badge/github.com/appleboy/drone-git-push)](https://goreportcard.com/report/github.com/appleboy/drone-git-push)
 [![Join the chat at https://gitter.im/drone/drone](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/drone/drone)
 
 Drone plugin to push changes to a remote `git` repository. For the usage
@@ -24,7 +24,7 @@ Build the docker image with the following commands:
 
 ```
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -tags netgo
-docker build --rm=true -t plugins/git-push .
+docker build --rm=true -t appleboy/drone-git-push .
 ```
 
 Please note incorrectly building the image for the correct x64 linux and with
@@ -49,5 +49,5 @@ docker run --rm \
   -e PLUGIN_FORCE=false \
   -v $(pwd)/$(pwd) \
   -w $(pwd) \
-  plugins/git-push
+  appleboy/drone-git-push
 ```
