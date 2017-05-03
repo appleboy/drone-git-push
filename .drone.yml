@@ -1,29 +1,70 @@
 workspace:
-  base: /go
-  path: src/github.com/drone-plugins/drone-git-push
+  base: /srv/app
+  path: src/github.com/appleboy/drone-git-push
+
+clone:
+  git:
+    image: plugins/git
+    depth: 50
+    tags: true
 
 pipeline:
   test:
-    image: golang:1.6
+    image: appleboy/golang-testing
+    pull: true
     environment:
-      - CGO_ENABLED=0
+      TAGS: netgo
+      GOPATH: /srv/app
+    secrets: [ codecov_token ]
     commands:
-      - go vet
-      - go test -cover -coverprofile=coverage.out
-      - go build -ldflags "-s -w -X main.build=$DRONE_BUILD_NUMBER" -a -tags netgo
-
-  latest:
-    image: docker
-    repo: plugins/git-push
-    tags: [ "latest", "1.0", "1" ]
+      - make vet
+      - make lint
+      - make test
+      - make build
+      # build binary for docker image
+      - make static_build
     when:
-      branch: master
-      event: push
+      event: [ push, tag, pull_request ]
 
-plugin:
-  name: Git Push
-  desc: Deploy or update a project via Git
-  type: deploy
-  image: plugins/git-push
-  labels:
-    - git
+  release:
+    image: appleboy/golang-testing
+    pull: true
+    environment:
+      TAGS: netgo
+      GOPATH: /srv/app
+    commands:
+      - make release
+    when:
+      event: [ tag ]
+      branch: [ refs/tags/* ]
+      local: false
+
+  publish_tag:
+    image: plugins/docker
+    repo: ${DRONE_REPO}
+    tags: [ '${DRONE_TAG}' ]
+    secrets: [ docker_username, docker_password ]
+    when:
+      event: [ tag ]
+      branch: [ refs/tags/* ]
+      local: false
+
+  publish_latest:
+    image: plugins/docker
+    repo: ${DRONE_REPO}
+    tags: [ 'latest' ]
+    secrets: [ docker_username, docker_password ]
+    when:
+      event: [ push ]
+      branch: [ master ]
+      local: false
+
+  release:
+    image: plugins/github-release
+    secrets: [ github_token ]
+    files:
+      - dist/release/*
+    when:
+      event: [ tag ]
+      branch: [ refs/tags/* ]
+      local: false
