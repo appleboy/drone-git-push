@@ -1,25 +1,29 @@
 package main
 
 import (
-	"github.com/drone-plugins/drone-git-push/repo"
+	"github.com/appleboy/drone-git-push/repo"
 )
 
 type (
+	// Netrc structure
 	Netrc struct {
 		Machine  string
 		Login    string
 		Password string
 	}
 
+	// Commit structure
 	Commit struct {
 		Author Author
 	}
 
+	// Author structure
 	Author struct {
 		Name  string
 		Email string
 	}
 
+	// Config structure
 	Config struct {
 		Key           string
 		Remote        string
@@ -33,6 +37,7 @@ type (
 		EmptyCommit   bool
 	}
 
+	// Plugin Structure
 	Plugin struct {
 		Netrc  Netrc
 		Commit Commit
