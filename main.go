@@ -9,14 +9,15 @@ import (
 	"github.com/urfave/cli"
 )
 
-var build = "0" // build number set at compile-time
+// Version set at compile-time
+var Version = "v1.1.0-dev"
 
 func main() {
 	app := cli.NewApp()
 	app.Name = "git-push plugin"
 	app.Usage = "git-push plugin"
 	app.Action = run
-	app.Version = fmt.Sprintf("1.0.%s", build)
+	app.Version = Version
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:   "commit.author.name",
