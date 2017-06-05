@@ -130,6 +130,7 @@ func (p Plugin) HandleRemote() error {
 	return nil
 }
 
+// HandlePath changes to a different directory if required
 func (p Plugin) HandlePath() error {
 	if p.Config.Path != "" {
 		if err := os.Chdir(p.Config.Path); err != nil {
