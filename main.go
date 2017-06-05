@@ -71,6 +71,11 @@ func main() {
 			Value:  "HEAD",
 			EnvVar: "PLUGIN_LOCAL_BRANCH,GIT_PUSH_LOCAL_BRANCH",
 		},
+		cli.StringFlag{
+			Name:   "path",
+			Usage:  "path to git repo",
+			EnvVar: "PlUGIN_PATH",
+		},
 		cli.BoolFlag{
 			Name:   "force",
 			Usage:  "force push to remote",
@@ -130,6 +135,7 @@ func run(c *cli.Context) error {
 			RemoteName:    c.String("remote-name"),
 			Branch:        c.String("branch"),
 			LocalBranch:   c.String("local-branch"),
+			Path:          c.String("path"),
 			Force:         c.Bool("force"),
 			SkipVerify:    c.Bool("skip-verify"),
 			Commit:        c.Bool("commit"),
