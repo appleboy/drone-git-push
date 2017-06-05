@@ -1,5 +1,5 @@
 workspace:
-  base: /srv/app
+  base: /go
   path: src/github.com/appleboy/drone-git-push
 
 clone:
@@ -14,7 +14,6 @@ pipeline:
     pull: true
     environment:
       TAGS: netgo
-      GOPATH: /srv/app
     secrets: [ codecov_token ]
     commands:
       - make vet
