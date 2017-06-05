@@ -21,6 +21,7 @@ pipeline:
       - make test
       - make build
       - make misspell-check
+      - make test-vendor
       # build binary for docker image
       - make static_build
     when:
