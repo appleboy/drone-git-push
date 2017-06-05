@@ -11,6 +11,7 @@ The following parameters are used to configure the plugin:
 * **remote_name** - name of the remote to use locally (default "deploy")
 * **branch** - target remote branch, defaults to master
 * **local_branch** - local branch or ref to push (default "HEAD")
+* **path** - path to git repo (if blank, assume current directory)
 * **force** - force push using the `--force` flag, defaults to false
 * **skip_verify** - skip verification of HTTPS certs, defaults to false
 * **commit** - add and commit the contents of the repo before pushing, defaults to false
@@ -61,4 +62,16 @@ pipeline:
     remote_name: origin
     branch: gh-pages
     local_ref: gh-pages
+```
+
+An example of specifying the path to a repo:
+
+```yaml
+pipeline:
+  git_push:
+    image: appleboy/drone-git-push
+    remote_name: origin
+    branch: gh-pages
+    local_ref: gh-pages
+    path: path/to/repo
 ```
