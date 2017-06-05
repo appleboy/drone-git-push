@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/appleboy/drone-git-push/repo"
+	"os"
 )
 
 type (
@@ -30,6 +31,7 @@ type (
 		RemoteName    string
 		Branch        string
 		LocalBranch   string
+		Path          string
 		Force         bool
 		SkipVerify    bool
 		Commit        bool
@@ -47,6 +49,10 @@ type (
 
 // Exec starts the plugin execution.
 func (p Plugin) Exec() error {
+	if err := p.HandlePath(); err != nil {
+		return err
+	}
+
 	if err := p.WriteConfig(); err != nil {
 		return err
 	}
@@ -117,6 +123,17 @@ func (p Plugin) WriteNetrc() error {
 func (p Plugin) HandleRemote() error {
 	if p.Config.Remote != "" {
 		if err := execute(repo.RemoteAdd(p.Config.RemoteName, p.Config.Remote)); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+// HandlePath changes to a different directory if required
+func (p Plugin) HandlePath() error {
+	if p.Config.Path != "" {
+		if err := os.Chdir(p.Config.Path); err != nil {
 			return err
 		}
 	}
