@@ -10,7 +10,7 @@ GOFMT ?= gofmt "-s"
 
 TARGETS ?= linux darwin windows
 PACKAGES ?= $(shell go list ./... | grep -v /vendor/)
-GOFILES := find . -name "*.go" -type f -not -path "./vendor/*"
+GOFILES := $(shell find . -name "*.go" -type f -not -path "./vendor/*")
 SOURCES ?= $(shell find . -name "*.go" -type f)
 TAGS ?=
 LDFLAGS ?= -X 'main.Version=$(VERSION)'
@@ -29,17 +29,32 @@ endif
 
 all: build
 
+.PHONY: misspell-check
+misspell-check:
+	@hash misspell > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
+		go get -u github.com/client9/misspell/cmd/misspell; \
+	fi
+	misspell -error $(GOFILES)
+
+.PHONY: misspell
+misspell:
+	@hash misspell > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
+		go get -u github.com/client9/misspell/cmd/misspell; \
+	fi
+	misspell -w $(GOFILES)
+
 .PHONY: fmt-check
 fmt-check:
 	# get all go files and run go fmt on them
-	@files=$$($(GOFILES) | xargs $(GOFMT) -l); if [ -n "$$files" ]; then \
+	@diff=$$($(GOFMT) -d $(GOFILES)); \
+	if [ -n "$$diff" ]; then \
 		echo "Please run 'make fmt' and commit the result:"; \
-		echo "$${files}"; \
+		echo "$${diff}"; \
 		exit 1; \
-		fi;
+	fi;
 
 fmt:
-	$(GOFILES) | xargs $(GOFMT) -w
+	$(GOFMT) -w $(GOFILES)
 
 vet:
 	go vet $(PACKAGES)

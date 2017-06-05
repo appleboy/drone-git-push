@@ -20,6 +20,7 @@ pipeline:
       - make lint
       - make test
       - make build
+      - make misspell-check
       # build binary for docker image
       - make static_build
     when:
