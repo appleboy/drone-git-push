@@ -74,7 +74,7 @@ func main() {
 		cli.StringFlag{
 			Name:   "path",
 			Usage:  "path to git repo",
-			EnvVar: "PlUGIN_PATH",
+			EnvVar: "PLUGIN_PATH",
 		},
 		cli.BoolFlag{
 			Name:   "force",
