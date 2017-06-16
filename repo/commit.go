@@ -18,6 +18,26 @@ func ForceAdd() *exec.Cmd {
 	return cmd
 }
 
+func Add() *exec.Cmd {
+	cmd := exec.Command(
+		"git",
+		"add",
+		"--all")
+
+	return cmd
+}
+
+func TestCleanTree() *exec.Cmd {
+	cmd := exec.Command(
+		"git",
+		"diff-index",
+		"--quiet",
+		"HEAD",
+		"--ignore-submodules")
+
+	return cmd
+}
+
 // EmptyCommit simply create an empty commit
 func EmptyCommit(msg string) *exec.Cmd {
 	if msg == "" {
