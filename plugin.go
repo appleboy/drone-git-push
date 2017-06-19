@@ -1,7 +1,7 @@
 package main
 
 import (
-	"drone-git-push/repo"
+	"github.com/appleboy/drone-git-push/repo"
 	"os"
 )
 
