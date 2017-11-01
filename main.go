@@ -64,6 +64,7 @@ func main() {
 			Name:   "branch",
 			Usage:  "name of remote branch",
 			EnvVar: "PLUGIN_BRANCH,GIT_PUSH_BRANCH",
+			Value:  "master",
 		},
 		cli.StringFlag{
 			Name:   "local-branch",
