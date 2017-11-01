@@ -77,11 +77,7 @@ func (p Plugin) Exec() error {
 		return err
 	}
 
-	if err := p.HandleCleanup(); err != nil {
-		return err
-	}
-
-	return nil
+	return p.HandleCleanup()
 }
 
 // WriteConfig writes all required configurations.
@@ -171,11 +167,7 @@ func (p Plugin) HandlePush() error {
 		force  = p.Config.Force
 	)
 
-	if err := execute(repo.RemotePushNamedBranch(name, local, branch, force)); err != nil {
-		return err
-	}
-
-	return nil
+	return execute(repo.RemotePushNamedBranch(name, local, branch, force))
 }
 
 // HandleCleanup does eventually do some cleanup.
