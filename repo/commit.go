@@ -50,7 +50,7 @@ func EmptyCommit(msg string) *exec.Cmd {
 		"git",
 		"commit",
 		"--allow-empty",
-		fmt.Sprintf("-m '%s'", msg))
+		fmt.Sprintf("-m \"%s\"", msg))
 
 	return cmd
 }
