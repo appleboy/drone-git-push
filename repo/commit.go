@@ -18,6 +18,28 @@ func ForceAdd() *exec.Cmd {
 	return cmd
 }
 
+// Add updates the index to match the working tree.
+func Add() *exec.Cmd {
+	cmd := exec.Command(
+		"git",
+		"add",
+		"--all")
+
+	return cmd
+}
+
+// TestCleanTree returns non-zero if diff between index and local repository
+func TestCleanTree() *exec.Cmd {
+	cmd := exec.Command(
+		"git",
+		"diff-index",
+		"--quiet",
+		"HEAD",
+		"--ignore-submodules")
+
+	return cmd
+}
+
 // EmptyCommit simply create an empty commit
 func EmptyCommit(msg string) *exec.Cmd {
 	if msg == "" {

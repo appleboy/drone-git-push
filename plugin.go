@@ -140,17 +140,21 @@ func (p Plugin) HandlePath() error {
 // HandleCommit commits dirty changes if required.
 func (p Plugin) HandleCommit() error {
 	if p.Config.Commit {
-		if p.Config.EmptyCommit {
-			if err := execute(repo.EmptyCommit(p.Config.CommitMessage)); err != nil {
-				return err
-			}
-		} else {
-			if err := execute(repo.ForceAdd()); err != nil {
-				return err
-			}
+		if err := execute(repo.Add()); err != nil {
+			return err
+		}
 
+		if err := execute(repo.TestCleanTree()); err != nil {
+			// changes to commit
 			if err := execute(repo.ForceCommit(p.Config.CommitMessage)); err != nil {
 				return err
+			}
+		} else { // no changes
+			if p.Config.EmptyCommit {
+				// no changes but commit anyway
+				if err := execute(repo.EmptyCommit(p.Config.CommitMessage)); err != nil {
+					return err
+				}
 			}
 		}
 	}
