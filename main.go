@@ -21,12 +21,12 @@ func main() {
 		cli.StringFlag{
 			Name:   "commit.author.name",
 			Usage:  "git author name",
-			EnvVar: "DRONE_COMMIT_AUTHOR",
+			EnvVar: "PLUGIN_AUTHOR_NAME,DRONE_COMMIT_AUTHOR",
 		},
 		cli.StringFlag{
 			Name:   "commit.author.email",
 			Usage:  "git author email",
-			EnvVar: "DRONE_COMMIT_AUTHOR_EMAIL",
+			EnvVar: "PLUGIN_AUTHOR_EMAIL,DRONE_COMMIT_AUTHOR_EMAIL",
 		},
 
 		cli.StringFlag{
