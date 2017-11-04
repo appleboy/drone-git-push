@@ -64,7 +64,7 @@ func ForceCommit(msg string) *exec.Cmd {
 	cmd := exec.Command(
 		"git",
 		"commit",
-		fmt.Sprintf("-m '%s'", msg))
+		fmt.Sprintf("-m \"%s\"", msg))
 
 	return cmd
 }
