@@ -1,6 +1,6 @@
 workspace:
-  base: /go
-  path: src/github.com/appleboy/drone-git-push
+  base: /go/src
+  path: github.com/appleboy/drone-git-push
 
 clone:
   git:
@@ -12,8 +12,6 @@ pipeline:
   test:
     image: appleboy/golang-testing
     pull: true
-    environment:
-      TAGS: netgo
     secrets: [ codecov_token ]
     commands:
       - make vet
@@ -22,27 +20,60 @@ pipeline:
       - make build
       - make misspell-check
       - make test-vendor
-      # build binary for docker image
-      - make static_build
-    when:
-      event: [ push, tag, pull_request ]
 
-  publish_latest:
+  build_linux_amd64:
+    image: appleboy/golang-testing
+    pull: true
+    group: build
+    commands:
+      - make linux_amd64
+
+  build_linux_arm64:
+    image: appleboy/golang-testing
+    pull: true
+    group: build
+    commands:
+      - make linux_arm64
+
+  build_linux_arm:
+    image: appleboy/golang-testing
+    pull: true
+    group: build
+    commands:
+      - make linux_arm
+
+  publish_linux_amd64:
     image: plugins/docker
-    repo: ${DRONE_REPO}
-    tags: [ 'latest' ]
+    repo: appleboy/drone-git-push
+    tags: [ latest ]
     secrets: [ docker_username, docker_password ]
     when:
-      event: [ push ]
-      branch: [ master ]
-      local: false
+      branch: master
+      event: push
+
+  publish_linux_arm64:
+    image: plugins/docker
+    repo: appleboy/drone-git-push
+    tags: [ linux-arm64 ]
+    secrets: [ docker_username, docker_password ]
+    dockerfile: Dockerfile.arm64
+    when:
+      branch: master
+      event: push
+
+  publish_linux_arm:
+    image: plugins/docker
+    repo: appleboy/drone-git-push
+    tags: [ linux-arm ]
+    secrets: [ docker_username, docker_password ]
+    dockerfile: Dockerfile.arm
+    when:
+      branch: master
+      event: push
 
   release:
     image: appleboy/golang-testing
     pull: true
-    environment:
-      TAGS: netgo
-      GOPATH: /srv/app
     commands:
       - make release
     when:
