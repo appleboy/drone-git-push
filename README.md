@@ -1,6 +1,6 @@
 # drone-git-push
 
-[![Build Status](http://drone.wu-boy.com/api/badges/appleboy/drone-git-push/status.svg)](http://beta.drone.io/appleboy/drone-git-push)
+[![Build Status](http://drone.wu-boy.com/api/badges/appleboy/drone-git-push/status.svg)](http://drone.wu-boy.com/appleboy/drone-git-push)
 [![Go Doc](https://godoc.org/github.com/appleboy/drone-git-push?status.svg)](http://godoc.org/github.com/appleboy/drone-git-push)
 [![Go Report](https://goreportcard.com/badge/github.com/appleboy/drone-git-push)](https://goreportcard.com/report/github.com/appleboy/drone-git-push)
 
