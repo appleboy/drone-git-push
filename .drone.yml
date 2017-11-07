@@ -51,25 +51,25 @@ pipeline:
       branch: master
       event: push
 
-  publish_linux_arm64:
-    image: plugins/docker
-    repo: appleboy/drone-git-push
-    tags: [ linux-arm64 ]
-    secrets: [ docker_username, docker_password ]
-    dockerfile: Dockerfile.arm64
-    when:
-      branch: master
-      event: push
+  # publish_linux_arm64:
+  #   image: plugins/docker
+  #   repo: appleboy/drone-git-push
+  #   tags: [ linux-arm64 ]
+  #   secrets: [ docker_username, docker_password ]
+  #   dockerfile: Dockerfile.arm64
+  #   when:
+  #     branch: master
+  #     event: push
 
-  publish_linux_arm:
-    image: plugins/docker
-    repo: appleboy/drone-git-push
-    tags: [ linux-arm ]
-    secrets: [ docker_username, docker_password ]
-    dockerfile: Dockerfile.arm
-    when:
-      branch: master
-      event: push
+  # publish_linux_arm:
+  #   image: plugins/docker
+  #   repo: appleboy/drone-git-push
+  #   tags: [ linux-arm ]
+  #   secrets: [ docker_username, docker_password ]
+  #   dockerfile: Dockerfile.arm
+  #   when:
+  #     branch: master
+  #     event: push
 
   release:
     image: appleboy/golang-testing
