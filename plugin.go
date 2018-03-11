@@ -33,6 +33,7 @@ type (
 		LocalBranch   string
 		Path          string
 		Force         bool
+		FollowTags    bool
 		SkipVerify    bool
 		Commit        bool
 		CommitMessage string
@@ -169,9 +170,10 @@ func (p Plugin) HandlePush() error {
 		local  = p.Config.LocalBranch
 		branch = p.Config.Branch
 		force  = p.Config.Force
+		followtags  = p.Config.FollowTags
 	)
 
-	return execute(repo.RemotePushNamedBranch(name, local, branch, force))
+	return execute(repo.RemotePushNamedBranch(name, local, branch, force, followtags))
 }
 
 // HandleCleanup does eventually do some cleanup.
