@@ -83,6 +83,11 @@ func main() {
 			EnvVar: "PLUGIN_FORCE,GIT_PUSH_FORCE",
 		},
 		cli.BoolFlag{
+			Name:   "followtags",
+			Usage:  "push to remote with tags",
+			EnvVar: "PLUGIN_FOLLOWTAGS,GIT_PUSH_FOLLOWTAGS",
+		},
+		cli.BoolFlag{
 			Name:   "skip-verify",
 			Usage:  "skip ssl verification",
 			EnvVar: "PLUGIN_SKIP_VERIFY,GIT_PUSH_SKIP_VERIFY",
@@ -138,6 +143,7 @@ func run(c *cli.Context) error {
 			LocalBranch:   c.String("local-branch"),
 			Path:          c.String("path"),
 			Force:         c.Bool("force"),
+			FollowTags:    c.Bool("followtags"),
 			SkipVerify:    c.Bool("skip-verify"),
 			Commit:        c.Bool("commit"),
 			CommitMessage: c.String("commit-message"),
