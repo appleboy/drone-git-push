@@ -17,6 +17,8 @@ The following parameters are used to configure the plugin:
 * **commit** - add and commit the contents of the repo before pushing, defaults to false
 * **commit_message** - add a custom message for commit, if it is omitted, it will be `[skip ci] Commit dirty state`
 * **empty_commit** - if you only want generate an empty commit, you can do it using this option
+* **author_name** - the name to use for the author of the commit (if blank, assume push commiter name)
+* **author_email** - the email address to use for the author of the commit (if blank, assume push commiter name)
 
 The following secret values can be set to configure the plugin.
 
