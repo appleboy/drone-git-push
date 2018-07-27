@@ -1,4 +1,4 @@
-FROM plugins/base:multiarch
+FROM plugins/base:i386
 
 LABEL org.label-schema.version=latest
 LABEL org.label-schema.vcs-url="https://github.com/appleboy/drone-git-push.git"
