@@ -1,19 +1,18 @@
-.PHONY: test build fmt vet errcheck lint install update release-dirs release-build release-copy release-check release coverage
-
 DIST := dist
 EXECUTABLE := drone-git-push
+GOFMT ?= gofmt "-s"
 
 # for dockerhub
 DEPLOY_ACCOUNT := appleboy
 DEPLOY_IMAGE := $(EXECUTABLE)
-GOFMT ?= gofmt "-s"
 
 TARGETS ?= linux darwin windows
 PACKAGES ?= $(shell go list ./... | grep -v /vendor/)
 GOFILES := $(shell find . -name "*.go" -type f -not -path "./vendor/*")
 SOURCES ?= $(shell find . -name "*.go" -type f)
 TAGS ?=
-LDFLAGS ?= -X 'main.Version=$(VERSION)'
+LDFLAGS ?= -X 'main.Version=$(VERSION)' -X 'main.BuildNum=$(DRONE_BUILD_NUMBER)'
+TMPDIR := $(shell mktemp -d 2>/dev/null || mktemp -d -t 'tempdir')
 
 ifneq ($(shell uname), Darwin)
 	EXTLDFLAGS = -extldflags "-static" $(null)
@@ -28,6 +27,30 @@ else
 endif
 
 all: build
+
+fmt:
+	$(GOFMT) -w $(GOFILES)
+
+vet:
+	go vet $(PACKAGES)
+
+errcheck:
+	@which errcheck > /dev/null; if [ $$? -ne 0 ]; then \
+		go get -u github.com/kisielk/errcheck; \
+	fi
+	errcheck $(PACKAGES)
+
+lint:
+	@which golint > /dev/null; if [ $$? -ne 0 ]; then \
+		go get -u github.com/golang/lint/golint; \
+	fi
+	for PKG in $(PACKAGES); do golint -set_exit_status $$PKG || exit 1; done;
+
+unconvert:
+	@which unconvert > /dev/null; if [ $$? -ne 0 ]; then \
+		go get -u github.com/mdempsky/unconvert; \
+	fi
+	for PKG in $(PACKAGES); do unconvert -v $$PKG || exit 1; done;
 
 .PHONY: misspell-check
 misspell-check:
@@ -53,9 +76,6 @@ fmt-check:
 		exit 1; \
 	fi;
 
-fmt:
-	$(GOFMT) -w $(GOFILES)
-
 .PHONY: test-vendor
 test-vendor:
 	@hash govendor > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
@@ -69,29 +89,8 @@ test-vendor:
 
 	govendor status || exit 1
 
-vet:
-	go vet $(PACKAGES)
-
-errcheck:
-	@hash errcheck > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
-		go get -u github.com/kisielk/errcheck; \
-	fi
-	errcheck $(PACKAGES)
-
-lint:
-	@hash golint > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
-		go get -u github.com/golang/lint/golint; \
-	fi
-	for PKG in $(PACKAGES); do golint -set_exit_status $$PKG || exit 1; done;
-
-unconvert:
-	@hash unconvert > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
-		go get -u github.com/mdempsky/unconvert; \
-	fi
-	for PKG in $(PACKAGES); do unconvert -v $$PKG || exit 1; done;
-
 test: fmt-check
-	for PKG in $(PACKAGES); do go test -v -cover -coverprofile $$GOPATH/src/$$PKG/coverage.txt $$PKG || exit 1; done;
+	for PKG in $(PACKAGES); do go test -cover -coverprofile $$GOPATH/src/$$PKG/coverage.txt $$PKG || exit 1; done;
 
 html:
 	go tool cover -html=coverage.txt
@@ -110,7 +109,7 @@ release-dirs:
 	mkdir -p $(DIST)/binaries $(DIST)/release
 
 release-build:
-	@hash gox > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
+	@which gox > /dev/null; if [ $$? -ne 0 ]; then \
 		go get -u github.com/mitchellh/gox; \
 	fi
 	gox -os="$(TARGETS)" -arch="amd64 386" -tags="$(TAGS)" -ldflags="-s -w $(LDFLAGS)" -output="$(DIST)/binaries/$(EXECUTABLE)-$(VERSION)-{{.OS}}-{{.Arch}}"
@@ -121,13 +120,16 @@ release-copy:
 release-check:
 	cd $(DIST)/release; $(foreach file,$(wildcard $(DIST)/release/$(EXECUTABLE)-*),sha256sum $(notdir $(file)) > $(notdir $(file)).sha256;)
 
-linux_amd64:
+build_linux_amd64:
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -tags '$(TAGS)' -ldflags '$(EXTLDFLAGS)-s -w $(LDFLAGS)' -o release/linux/amd64/$(DEPLOY_IMAGE)
 
-linux_arm64:
+build_linux_i386:
+	CGO_ENABLED=0 GOOS=linux GOARCH=386 go build -a -tags '$(TAGS)' -ldflags '$(EXTLDFLAGS)-s -w $(LDFLAGS)' -o release/linux/i386/$(DEPLOY_IMAGE)
+
+build_linux_arm64:
 	CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -a -tags '$(TAGS)' -ldflags '$(EXTLDFLAGS)-s -w $(LDFLAGS)' -o release/linux/arm64/$(DEPLOY_IMAGE)
 
-linux_arm:
+build_linux_arm:
 	CGO_ENABLED=0 GOOS=linux GOARCH=arm GOARM=7 go build -a -tags '$(TAGS)' -ldflags '$(EXTLDFLAGS)-s -w $(LDFLAGS)' -o release/linux/arm/$(DEPLOY_IMAGE)
 
 docker_image:
@@ -145,10 +147,7 @@ endif
 	docker push $(DEPLOY_ACCOUNT)/$(DEPLOY_IMAGE):$(tag)
 
 coverage:
-	sed -i '/main.go/d' .cover/coverage.txt
-	curl -s https://codecov.io/bash > .codecov && \
-	chmod +x .codecov && \
-	./.codecov -f .cover/coverage.txt
+	sed -i '/main.go/d' coverage.txt
 
 clean:
 	go clean -x -i ./...

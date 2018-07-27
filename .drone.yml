@@ -22,25 +22,40 @@ pipeline:
       - make test-vendor
 
   build_linux_amd64:
-    image: appleboy/golang-testing
+    image: golang:1.10
     pull: true
     group: build
     commands:
-      - make linux_amd64
+      - make build_linux_amd64
+
+  build_linux_i386:
+    image: golang:1.10
+    pull: true
+    group: build
+    commands:
+      - make build_linux_i386
 
   build_linux_arm64:
-    image: appleboy/golang-testing
+    image: golang:1.10
     pull: true
     group: build
     commands:
-      - make linux_arm64
+      - make build_linux_arm64
 
   build_linux_arm:
-    image: appleboy/golang-testing
+    image: golang:1.10
     pull: true
     group: build
     commands:
-      - make linux_arm
+      - make build_linux_arm
+
+  # codecov:
+  #   image: robertstettner/drone-codecov
+  #   secrets: [ codecov_token ]
+  #   files:
+  #     - .cover/coverage.txt
+  #   when:
+  #     event: [ push, pull_request ]
 
   publish_linux_amd64:
     image: plugins/docker
