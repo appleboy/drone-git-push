@@ -59,32 +59,67 @@ pipeline:
 
   publish_linux_amd64:
     image: plugins/docker
-    repo: appleboy/drone-git-push
-    tags: [ latest ]
+    pull: true
     secrets: [ docker_username, docker_password ]
+    repo: ${DRONE_REPO}
+    auto_tag: true
+    group: release
+    dockerfile: Dockerfile
     when:
-      branch: master
-      event: push
+      event: [ push, tag ]
+      local: false
 
-  # publish_linux_arm64:
-  #   image: plugins/docker
-  #   repo: appleboy/drone-git-push
-  #   tags: [ linux-arm64 ]
-  #   secrets: [ docker_username, docker_password ]
-  #   dockerfile: Dockerfile.arm64
-  #   when:
-  #     branch: master
-  #     event: push
+  publish_alpine:
+    image: plugins/docker
+    group: release
+    pull: true
+    dockerfile: Dockerfile.alpine
+    secrets: [ docker_username, docker_password ]
+    default_tags: true
+    default_suffix: alpine
+    repo: ${DRONE_REPO}
+    when:
+      event: [ push, tag ]
+      local: false
 
-  # publish_linux_arm:
-  #   image: plugins/docker
-  #   repo: appleboy/drone-git-push
-  #   tags: [ linux-arm ]
-  #   secrets: [ docker_username, docker_password ]
-  #   dockerfile: Dockerfile.arm
-  #   when:
-  #     branch: master
-  #     event: push
+  publish_linux_i386:
+    image: plugins/docker
+    pull: true
+    secrets: [ docker_username, docker_password ]
+    group: release
+    repo: ${DRONE_REPO}
+    auto_tag: true
+    auto_tag_suffix: i386
+    dockerfile: Dockerfile.i386
+    when:
+      event: [ push, tag ]
+      local: false
+
+  publish_linux_arm64:
+    image: plugins/docker
+    pull: true
+    secrets: [ docker_username, docker_password ]
+    group: release
+    repo: ${DRONE_REPO}
+    auto_tag: true
+    auto_tag_suffix: arm64
+    dockerfile: Dockerfile.arm64
+    when:
+      event: [ push, tag ]
+      local: false
+
+  publish_linux_arm:
+    image: plugins/docker
+    pull: true
+    secrets: [ docker_username, docker_password ]
+    group: release
+    repo: ${DRONE_REPO}
+    auto_tag: true
+    auto_tag_suffix: arm
+    dockerfile: Dockerfile.arm
+    when:
+      event: [ push, tag ]
+      local: false
 
   release:
     image: appleboy/golang-testing
