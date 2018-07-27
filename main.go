@@ -9,7 +9,10 @@ import (
 )
 
 // Version set at compile-time
-var Version = "v1.1.0-dev"
+var (
+	Version  string
+	BuildNum string
+)
 
 func main() {
 	app := cli.NewApp()
@@ -111,6 +114,12 @@ func main() {
 			Name:  "env-file",
 			Usage: "source env file",
 		},
+	}
+
+	app.Version = Version
+
+	if BuildNum != "" {
+		app.Version = app.Version + "+" + BuildNum
 	}
 
 	if err := app.Run(os.Args); err != nil {
