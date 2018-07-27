@@ -116,8 +116,6 @@ func main() {
 		},
 	}
 
-	app.Version = Version
-
 	if BuildNum != "" {
 		app.Version = app.Version + "+" + BuildNum
 	}
