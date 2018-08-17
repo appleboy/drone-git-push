@@ -19,6 +19,7 @@ The following parameters are used to configure the plugin:
 * **empty_commit** - if you only want generate an empty commit, you can do it using this option
 * **author_name** - the name to use for the author of the commit (if blank, assume push commiter name)
 * **author_email** - the email address to use for the author of the commit (if blank, assume push commiter name)
+* **followtags** - push with --follow-tags option
 
 The following secret values can be set to configure the plugin.
 
