@@ -5,5 +5,13 @@ LABEL maintainer="Bo-Yi Wu <appleboy.tw@gmail.com>" \
   org.label-schema.vendor="Bo-Yi Wu" \
   org.label-schema.schema-version="1.0"
 
+SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
+
+RUN Invoke-WebRequest 'https://github.com/git-for-windows/git/releases/download/v2.12.2.windows.2/MinGit-2.12.2.2-64-bit.zip' -OutFile 'git.zip'; `
+  Expand-Archive -Path git.zip -DestinationPath c:\git\ -Force; `
+  $env:PATH = 'c:\git\cmd;c:\git\mingw64\bin;c:\git\usr\bin;{0}' -f $env:PATH; `
+  Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment\' -Name Path -Value $env:PATH; `
+  Remove-Item -Path git.zip;
+
 ADD release/drone-git-push.exe /drone-git-push.exe
 ENTRYPOINT [ "\\drone-git-push.exe" ]
