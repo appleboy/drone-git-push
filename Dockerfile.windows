@@ -1,3 +1,4 @@
+# escape=`
 FROM microsoft/nanoserver:10.0.14393.1884
 
 LABEL maintainer="Bo-Yi Wu <appleboy.tw@gmail.com>" \
