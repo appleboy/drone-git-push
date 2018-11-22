@@ -40,7 +40,7 @@ func TestCleanTree() *exec.Cmd {
 }
 
 // EmptyCommit simply create an empty commit
-func EmptyCommit(msg string) *exec.Cmd {
+func EmptyCommit(msg string, noVerify bool) *exec.Cmd {
 	if msg == "" {
 		msg = defaultCommitMessage
 	}
@@ -53,11 +53,17 @@ func EmptyCommit(msg string) *exec.Cmd {
 		msg,
 	)
 
+	if noVerify {
+		cmd.Args = append(
+			cmd.Args,
+			"--no-verify")
+	}
+
 	return cmd
 }
 
 // ForceCommit commits every change while skipping CI.
-func ForceCommit(msg string) *exec.Cmd {
+func ForceCommit(msg string, noVerify bool) *exec.Cmd {
 	if msg == "" {
 		msg = defaultCommitMessage
 	}
@@ -68,6 +74,12 @@ func ForceCommit(msg string) *exec.Cmd {
 		"-m",
 		msg,
 	)
+
+	if noVerify {
+		cmd.Args = append(
+			cmd.Args,
+			"--no-verify")
+	}
 
 	return cmd
 }

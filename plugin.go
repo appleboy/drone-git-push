@@ -38,6 +38,7 @@ type (
 		Commit        bool
 		CommitMessage string
 		EmptyCommit   bool
+		NoVerify      bool
 	}
 
 	// Plugin Structure
@@ -147,13 +148,13 @@ func (p Plugin) HandleCommit() error {
 
 		if err := execute(repo.TestCleanTree()); err != nil {
 			// changes to commit
-			if err := execute(repo.ForceCommit(p.Config.CommitMessage)); err != nil {
+			if err := execute(repo.ForceCommit(p.Config.CommitMessage, p.Config.NoVerify)); err != nil {
 				return err
 			}
 		} else { // no changes
 			if p.Config.EmptyCommit {
 				// no changes but commit anyway
-				if err := execute(repo.EmptyCommit(p.Config.CommitMessage)); err != nil {
+				if err := execute(repo.EmptyCommit(p.Config.CommitMessage, p.Config.NoVerify)); err != nil {
 					return err
 				}
 			}

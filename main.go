@@ -155,6 +155,7 @@ func run(c *cli.Context) error {
 			Commit:        c.Bool("commit"),
 			CommitMessage: c.String("commit-message"),
 			EmptyCommit:   c.Bool("empty-commit"),
+			NoVerify:      c.Bool("no-verify"),
 		},
 	}
 
