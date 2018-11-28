@@ -10,6 +10,7 @@ import (
 func execute(cmd *exec.Cmd) error {
 	fmt.Println("+", strings.Join(cmd.Args, " "))
 
+	cmd.Env = os.Environ()
 	cmd.Stderr = os.Stderr
 	cmd.Stdin = os.Stdin
 
