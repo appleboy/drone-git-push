@@ -110,6 +110,11 @@ func main() {
 			Usage:  "empty commit",
 			EnvVar: "PLUGIN_EMPTY_COMMIT,GIT_PUSH_EMPTY_COMMIT",
 		},
+		cli.BoolFlag{
+			Name:   "no-verify",
+			Usage:  "bypasses the pre-commit and commit-msg hooks",
+			EnvVar: "PLUGIN_NO_VERIFY,GIT_PUSH_NO_VERIFY",
+		},
 		cli.StringFlag{
 			Name:  "env-file",
 			Usage: "source env file",
