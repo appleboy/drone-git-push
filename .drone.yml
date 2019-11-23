@@ -1,157 +1,377 @@
-workspace:
-  base: /go
-  path: src/github.com/appleboy/drone-git-push
+---
+kind: pipeline
+name: testing
 
-clone:
-  git:
-    image: plugins/git
-    depth: 50
-    tags: true
+platform:
+  os: linux
+  arch: amd64
 
-pipeline:
-  lint:
-    image: golang:1.11
-    pull: true
-    environment:
-      GO111MODULE: "on"
-    group: test
-    commands:
-      - make vet
-      - make lint
-      - make misspell-check
+steps:
+- name: vet
+  pull: always
+  image: golang:1.13
+  commands:
+  - make vet
+  volumes:
+  - name: gopath
+    path: /go
 
-  test:
-    image: golang:1.11
-    pull: true
-    environment:
-      GO111MODULE: "on"
-    group: test
-    commands:
-      - make test
-      - make coverage
+- name: lint
+  pull: always
+  image: golang:1.13
+  commands:
+  - make lint
+  volumes:
+  - name: gopath
+    path: /go
 
-  build_linux_amd64:
-    image: golang:1.11
-    pull: true
-    group: build
-    environment:
-      GO111MODULE: "on"
-    commands:
-      - make build_linux_amd64
+- name: misspell
+  pull: always
+  image: golang:1.13
+  commands:
+  - make misspell-check
+  volumes:
+  - name: gopath
+    path: /go
 
-  build_linux_i386:
-    image: golang:1.11
-    pull: true
-    group: build
-    environment:
-      GO111MODULE: "on"
-    commands:
-      - make build_linux_i386
+- name: test
+  pull: always
+  image: golang:1.13
+  commands:
+  - make test
+  - make coverage
+  volumes:
+  - name: gopath
+    path: /go
 
-  build_linux_arm64:
-    image: golang:1.11
-    pull: true
-    group: build
-    environment:
-      GO111MODULE: "on"
-    commands:
-      - make build_linux_arm64
+- name: codecov
+  pull: always
+  image: robertstettner/drone-codecov
+  settings:
+    token:
+      from_secret: codecov_token
 
-  build_linux_arm:
-    image: golang:1.11
-    pull: true
-    group: build
-    environment:
-      GO111MODULE: "on"
-    commands:
-      - make build_linux_arm
+volumes:
+- name: gopath
+  temp: {}
 
-  codecov:
-    image: robertstettner/drone-codecov
-    secrets: [ codecov_token ]
-    when:
-      event: [ push, pull_request ]
-      status: [ success ]
+---
+kind: pipeline
+name: linux-amd64
 
-  release:
-    image: golang:1.11
-    pull: true
-    commands:
-      - make release
-    when:
-      event: [ tag ]
-      local: false
+platform:
+  os: linux
+  arch: amd64
 
-  release_tag:
-    image: plugins/github-release
-    secrets: [ github_release_api_key ]
-    group: release
-    files:
-      - dist/release/*
-    when:
-      event: [ tag ]
-      local: false
+steps:
+- name: build-push
+  pull: always
+  image: golang:1.13
+  commands:
+  - go build -v -ldflags '-X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/amd64/drone-telegram
+  environment:
+    CGO_ENABLED: 0
+  when:
+    event:
+      exclude:
+      - tag
 
-  publish_linux_amd64:
-    image: plugins/docker:17.12
-    group: release
-    pull: true
-    repo: ${DRONE_REPO}
-    secrets: [ docker_username, docker_password ]
+- name: build-tag
+  pull: always
+  image: golang:1.13
+  commands:
+  - go build -v -ldflags '-X main.version=${DRONE_TAG##v} -X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/amd64/drone-telegram
+  environment:
+    CGO_ENABLED: 0
+  when:
+    event:
+    - tag
+
+- name: executable
+  pull: always
+  image: golang:1.13
+  commands:
+  - ./release/linux/amd64/drone-telegram --help
+
+- name: dryrun
+  pull: always
+  image: plugins/docker:linux-amd64
+  settings:
+    cache_from: appleboy/drone-telegram
+    dockerfile: docker/Dockerfile.linux.amd64
+    dry_run: true
+    repo: appleboy/drone-telegram
+    tags: linux-amd64
+  when:
+    event:
+    - pull_request
+
+- name: publish
+  pull: always
+  image: plugins/docker:linux-amd64
+  settings:
     auto_tag: true
     auto_tag_suffix: linux-amd64
-    when:
-      event: [ push, tag ]
-      local: false
+    cache_from: appleboy/drone-telegram
+    daemon_off: false
+    dockerfile: docker/Dockerfile.linux.amd64
+    password:
+      from_secret: docker_password
+    repo: appleboy/drone-telegram
+    username:
+      from_secret: docker_username
+  when:
+    event:
+      exclude:
+      - pull_request
 
-  publish_alpine:
-    image: plugins/docker:17.12
-    group: release
-    pull: true
-    dockerfile: Dockerfile.alpine
-    secrets: [ docker_username, docker_password ]
+trigger:
+  ref:
+  - refs/heads/master
+  - refs/pull/**
+  - refs/tags/**
+
+depends_on:
+- testing
+
+---
+kind: pipeline
+name: linux-arm64
+
+platform:
+  os: linux
+  arch: arm64
+
+steps:
+- name: build-push
+  pull: always
+  image: golang:1.13
+  commands:
+  - go build -v -ldflags '-X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/arm64/drone-telegram
+  environment:
+    CGO_ENABLED: 0
+  when:
+    event:
+      exclude:
+      - tag
+
+- name: build-tag
+  pull: always
+  image: golang:1.13
+  commands:
+  - go build -v -ldflags '-X main.version=${DRONE_TAG##v} -X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/arm64/drone-telegram
+  environment:
+    CGO_ENABLED: 0
+  when:
+    event:
+    - tag
+
+- name: executable
+  pull: always
+  image: golang:1.13
+  commands:
+  - ./release/linux/arm64/drone-telegram --help
+
+- name: dryrun
+  pull: always
+  image: plugins/docker:linux-arm64
+  settings:
+    cache_from: appleboy/drone-telegram
+    dockerfile: docker/Dockerfile.linux.arm64
+    dry_run: true
+    repo: appleboy/drone-telegram
+    tags: linux-arm64
+  when:
+    event:
+    - pull_request
+
+- name: publish
+  pull: always
+  image: plugins/docker:linux-arm64
+  settings:
     auto_tag: true
-    auto_tag_suffix: linux-alpine
-    repo: ${DRONE_REPO}
-    when:
-      event: [ push, tag ]
-      local: false
+    auto_tag_suffix: linux-arm64
+    cache_from: appleboy/drone-telegram
+    daemon_off: false
+    dockerfile: docker/Dockerfile.linux.arm64
+    password:
+      from_secret: docker_password
+    repo: appleboy/drone-telegram
+    username:
+      from_secret: docker_username
+  when:
+    event:
+      exclude:
+      - pull_request
 
-  # publish_linux_i386:
-  #   image: plugins/docker:17.12
-  #   pull: true
-  #   secrets: [ docker_username, docker_password ]
-  #   group: release
-  #   repo: ${DRONE_REPO}
-  #   auto_tag: true
-  #   auto_tag_suffix: linux-i386
-  #   dockerfile: Dockerfile.i386
-  #   when:
-  #     event: [ push, tag ]
-  #     local: false
+trigger:
+  ref:
+  - refs/heads/master
+  - refs/pull/**
+  - refs/tags/**
 
-  # publish_linux_arm64:
-  #   image: plugins/docker:17.12
-  #   pull: true
-  #   secrets: [ docker_username, docker_password ]
-  #   group: release
-  #   repo: ${DRONE_REPO}
-  #   auto_tag: true
-  #   auto_tag_suffix: linux-arm64
-  #   dockerfile: Dockerfile.arm64
-  #   when:
-  #     event: [ push, tag ]
-  #     local: false
+depends_on:
+- testing
 
-  # publish_linux_arm:
-  #   image: plugins/docker:17.12
-  #   pull: true
-  #   secrets: [ docker_username, docker_password ]
-  #   group: release
-  #   repo: ${DRONE_REPO}
-  #   auto_tag: true
-  #   auto_tag_suffix: linux-arm
-  #   dockerfile: Dockerfile.arm
-  #   when:
-  #     event: [ push, tag ]
-  #     local: false
+---
+kind: pipeline
+name: linux-arm
+
+platform:
+  os: linux
+  arch: arm
+
+steps:
+- name: build-push
+  pull: always
+  image: golang:1.13
+  commands:
+  - go build -v -ldflags '-X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/arm/drone-telegram
+  environment:
+    CGO_ENABLED: 0
+  when:
+    event:
+      exclude:
+      - tag
+
+- name: build-tag
+  pull: always
+  image: golang:1.13
+  commands:
+  - go build -v -ldflags '-X main.version=${DRONE_TAG##v} -X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/arm/drone-telegram
+  environment:
+    CGO_ENABLED: 0
+  when:
+    event:
+    - tag
+
+- name: executable
+  pull: always
+  image: golang:1.13
+  commands:
+  - ./release/linux/arm/drone-telegram --help
+
+- name: dryrun
+  pull: always
+  image: plugins/docker:linux-arm
+  settings:
+    cache_from: appleboy/drone-telegram
+    dockerfile: docker/Dockerfile.linux.arm
+    dry_run: true
+    repo: appleboy/drone-telegram
+    tags: linux-arm
+  when:
+    event:
+    - pull_request
+
+- name: publish
+  pull: always
+  image: plugins/docker:linux-arm
+  settings:
+    auto_tag: true
+    auto_tag_suffix: linux-arm
+    cache_from: appleboy/drone-telegram
+    daemon_off: false
+    dockerfile: docker/Dockerfile.linux.arm
+    password:
+      from_secret: docker_password
+    repo: appleboy/drone-telegram
+    username:
+      from_secret: docker_username
+  when:
+    event:
+      exclude:
+      - pull_request
+
+trigger:
+  ref:
+  - refs/heads/master
+  - refs/pull/**
+  - refs/tags/**
+
+depends_on:
+- testing
+
+---
+kind: pipeline
+name: release-binary
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: build-all-binary
+  pull: always
+  image: golang:1.13
+  commands:
+  - make release
+  when:
+    event:
+    - tag
+
+- name: deploy-all-binary
+  pull: always
+  image: plugins/github-release
+  settings:
+    api_key:
+      from_secret: github_release_api_key
+    files:
+    - dist/release/*
+  when:
+    event:
+    - tag
+
+trigger:
+  ref:
+  - refs/tags/**
+
+depends_on:
+- testing
+
+---
+kind: pipeline
+name: notifications
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: telegram
+  pull: always
+  image: appleboy/drone-telegram
+  settings:
+    message: "{{#success build.status}} ✅  Build #{{build.number}} of `{{repo.name}}` succeeded.\n\n📝 Commit by {{commit.author}} on `{{commit.branch}}`:\n``` {{commit.message}} ```\n\n🌐 {{ build.link }} {{else}} ❌  Build #{{build.number}} of `{{repo.name}}` failed.\n\n📝 Commit by {{commit.author}} on `{{commit.branch}}`:\n``` {{commit.message}} ```\n\n🌐 {{ build.link }} {{/success}}\n"
+    to:
+      from_secret: telegram_to
+    token:
+      from_secret: telegram_token
+
+- name: manifest
+  pull: always
+  image: plugins/manifest
+  settings:
+    ignore_missing: true
+    password:
+      from_secret: docker_password
+    spec: docker/manifest.tmpl
+    username:
+      from_secret: docker_username
+
+trigger:
+  ref:
+  - refs/heads/master
+  - refs/tags/**
+
+depends_on:
+- linux-amd64
+- linux-arm64
+- linux-arm
+- release-binary
+
+---
+kind: signature
+hmac: 9a4dcc3659b6f2cb98486e40e4cb0c16d6fc19ad783d3bca13d30c476daf8213
+
+...
