@@ -5,7 +5,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/sirupsen/logrus"
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 )
 
 // Version set at compile-time
@@ -21,101 +21,101 @@ func main() {
 	app.Action = run
 	app.Version = Version
 	app.Flags = []cli.Flag{
-		cli.StringFlag{
-			Name:   "commit.author.name",
-			Usage:  "git author name",
-			EnvVar: "PLUGIN_AUTHOR_NAME,DRONE_COMMIT_AUTHOR",
+		&cli.StringFlag{
+			Name:    "commit.author.name",
+			Usage:   "git author name",
+			EnvVars: []string{"PLUGIN_AUTHOR_NAME", "DRONE_COMMIT_AUTHOR"},
 		},
-		cli.StringFlag{
-			Name:   "commit.author.email",
-			Usage:  "git author email",
-			EnvVar: "PLUGIN_AUTHOR_EMAIL,DRONE_COMMIT_AUTHOR_EMAIL",
+		&cli.StringFlag{
+			Name:    "commit.author.email",
+			Usage:   "git author email",
+			EnvVars: []string{"PLUGIN_AUTHOR_EMAIL", "DRONE_COMMIT_AUTHOR_EMAIL"},
 		},
 
-		cli.StringFlag{
-			Name:   "netrc.machine",
-			Usage:  "netrc machine",
-			EnvVar: "DRONE_NETRC_MACHINE",
+		&cli.StringFlag{
+			Name:    "netrc.machine",
+			Usage:   "netrc machine",
+			EnvVars: []string{"DRONE_NETRC_MACHINE"},
 		},
-		cli.StringFlag{
-			Name:   "netrc.username",
-			Usage:  "netrc username",
-			EnvVar: "DRONE_NETRC_USERNAME",
+		&cli.StringFlag{
+			Name:    "netrc.username",
+			Usage:   "netrc username",
+			EnvVars: []string{"DRONE_NETRC_USERNAME"},
 		},
-		cli.StringFlag{
-			Name:   "netrc.password",
-			Usage:  "netrc password",
-			EnvVar: "DRONE_NETRC_PASSWORD",
+		&cli.StringFlag{
+			Name:    "netrc.password",
+			Usage:   "netrc password",
+			EnvVars: []string{"DRONE_NETRC_PASSWORD"},
 		},
-		cli.StringFlag{
-			Name:   "ssh-key",
-			Usage:  "private ssh key",
-			EnvVar: "PLUGIN_SSH_KEY,GIT_PUSH_SSH_KEY",
+		&cli.StringFlag{
+			Name:    "ssh-key",
+			Usage:   "private ssh key",
+			EnvVars: []string{"PLUGIN_SSH_KEY", "GIT_PUSH_SSH_KEY"},
 		},
-		cli.StringFlag{
-			Name:   "remote",
-			Usage:  "url of the remote repo",
-			EnvVar: "PLUGIN_REMOTE,GIT_PUSH_REMOTE",
+		&cli.StringFlag{
+			Name:    "remote",
+			Usage:   "url of the remote repo",
+			EnvVars: []string{"PLUGIN_REMOTE", "GIT_PUSH_REMOTE"},
 		},
-		cli.StringFlag{
-			Name:   "remote-name",
-			Usage:  "name of the remote repo",
-			Value:  "deploy",
-			EnvVar: "PLUGIN_REMOTE_NAME,GIT_PUSH_REMOTE_NAME",
+		&cli.StringFlag{
+			Name:    "remote-name",
+			Usage:   "name of the remote repo",
+			Value:   "deploy",
+			EnvVars: []string{"PLUGIN_REMOTE_NAME", "GIT_PUSH_REMOTE_NAME"},
 		},
-		cli.StringFlag{
-			Name:   "branch",
-			Usage:  "name of remote branch",
-			EnvVar: "PLUGIN_BRANCH,GIT_PUSH_BRANCH",
-			Value:  "master",
+		&cli.StringFlag{
+			Name:    "branch",
+			Usage:   "name of remote branch",
+			EnvVars: []string{"PLUGIN_BRANCH", "GIT_PUSH_BRANCH"},
+			Value:   "master",
 		},
-		cli.StringFlag{
-			Name:   "local-branch",
-			Usage:  "name of local branch",
-			Value:  "HEAD",
-			EnvVar: "PLUGIN_LOCAL_BRANCH,GIT_PUSH_LOCAL_BRANCH",
+		&cli.StringFlag{
+			Name:    "local-branch",
+			Usage:   "name of local branch",
+			Value:   "HEAD",
+			EnvVars: []string{"PLUGIN_LOCAL_BRANCH", "GIT_PUSH_LOCAL_BRANCH"},
 		},
-		cli.StringFlag{
-			Name:   "path",
-			Usage:  "path to git repo",
-			EnvVar: "PLUGIN_PATH",
+		&cli.StringFlag{
+			Name:    "path",
+			Usage:   "path to git repo",
+			EnvVars: []string{"PLUGIN_PATH"},
 		},
-		cli.BoolFlag{
-			Name:   "force",
-			Usage:  "force push to remote",
-			EnvVar: "PLUGIN_FORCE,GIT_PUSH_FORCE",
+		&cli.BoolFlag{
+			Name:    "force",
+			Usage:   "force push to remote",
+			EnvVars: []string{"PLUGIN_FORCE", "GIT_PUSH_FORCE"},
 		},
-		cli.BoolFlag{
-			Name:   "followtags",
-			Usage:  "push to remote with tags",
-			EnvVar: "PLUGIN_FOLLOWTAGS,GIT_PUSH_FOLLOWTAGS",
+		&cli.BoolFlag{
+			Name:    "followtags",
+			Usage:   "push to remote with tags",
+			EnvVars: []string{"PLUGIN_FOLLOWTAGS", "GIT_PUSH_FOLLOWTAGS"},
 		},
-		cli.BoolFlag{
-			Name:   "skip-verify",
-			Usage:  "skip ssl verification",
-			EnvVar: "PLUGIN_SKIP_VERIFY,GIT_PUSH_SKIP_VERIFY",
+		&cli.BoolFlag{
+			Name:    "skip-verify",
+			Usage:   "skip ssl verification",
+			EnvVars: []string{"PLUGIN_SKIP_VERIFY", "GIT_PUSH_SKIP_VERIFY"},
 		},
-		cli.BoolFlag{
-			Name:   "commit",
-			Usage:  "commit dirty changes",
-			EnvVar: "PLUGIN_COMMIT,GIT_PUSH_COMMIT",
+		&cli.BoolFlag{
+			Name:    "commit",
+			Usage:   "commit dirty changes",
+			EnvVars: []string{"PLUGIN_COMMIT", "GIT_PUSH_COMMIT"},
 		},
-		cli.StringFlag{
-			Name:   "commit-message",
-			Usage:  "commit message",
-			EnvVar: "PLUGIN_COMMIT_MESSAGE,GIT_PUSH_COMMIT_MESSAGE",
+		&cli.StringFlag{
+			Name:    "commit-message",
+			Usage:   "commit message",
+			EnvVars: []string{"PLUGIN_COMMIT_MESSAGE", "GIT_PUSH_COMMIT_MESSAGE"},
 		},
-		cli.BoolFlag{
-			Name:   "empty-commit",
-			Usage:  "empty commit",
-			EnvVar: "PLUGIN_EMPTY_COMMIT,GIT_PUSH_EMPTY_COMMIT",
+		&cli.BoolFlag{
+			Name:    "empty-commit",
+			Usage:   "empty commit",
+			EnvVars: []string{"PLUGIN_EMPTY_COMMIT", "GIT_PUSH_EMPTY_COMMIT"},
 		},
-		cli.BoolFlag{
-			Name:   "no-verify",
-			Usage:  "bypasses the pre-commit and commit-msg hooks",
-			EnvVar: "PLUGIN_NO_VERIFY,GIT_PUSH_NO_VERIFY",
+		&cli.BoolFlag{
+			Name:    "no-verify",
+			Usage:   "bypasses the pre-commit and commit-msg hooks",
+			EnvVars: []string{"PLUGIN_NO_VERIFY", "GIT_PUSH_NO_VERIFY"},
 		},
-		cli.StringFlag{
+		&cli.StringFlag{
 			Name:  "env-file",
 			Usage: "source env file",
 		},
