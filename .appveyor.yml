@@ -28,6 +28,7 @@ install:
 
 build_script:
   - ps: |
+      go mod tidy
       if ( $env:APPVEYOR_REPO_TAG -eq 'false' ) {
         go build -ldflags "-X main.Version=$env:APPVEYOR_REPO_COMMIT -X main.BuildNum=$env:APPVEYOR_BUILD_VERSION" -a -o release/drone-git-push.exe
       } else {
