@@ -8,6 +8,6 @@ LABEL maintainer="Bo-Yi Wu <appleboy.tw@gmail.com>" \
 RUN apk add --no-cache ca-certificates git openssh curl perl && \
   rm -rf /var/cache/apk/*
 
-ADD release/linux/arm64/drone-git-push /bin/
+COPY release/linux/arm64/drone-git-push /bin/
 
 ENTRYPOINT ["/bin/drone-git-push"]
