@@ -68,7 +68,7 @@ steps:
   pull: always
   image: golang:1.13
   commands:
-  - go build -v -ldflags '-X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/amd64/drone-telegram
+  - go build -v -ldflags '-X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/amd64/drone-git-push
   environment:
     CGO_ENABLED: 0
   when:
@@ -80,7 +80,7 @@ steps:
   pull: always
   image: golang:1.13
   commands:
-  - go build -v -ldflags '-X main.version=${DRONE_TAG##v} -X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/amd64/drone-telegram
+  - go build -v -ldflags '-X main.version=${DRONE_TAG##v} -X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/amd64/drone-git-push
   environment:
     CGO_ENABLED: 0
   when:
@@ -91,16 +91,16 @@ steps:
   pull: always
   image: golang:1.13
   commands:
-  - ./release/linux/amd64/drone-telegram --help
+  - ./release/linux/amd64/drone-git-push --help
 
 - name: dryrun
   pull: always
   image: plugins/docker:linux-amd64
   settings:
-    cache_from: appleboy/drone-telegram
+    cache_from: appleboy/drone-git-push
     dockerfile: docker/Dockerfile.linux.amd64
     dry_run: true
-    repo: appleboy/drone-telegram
+    repo: appleboy/drone-git-push
     tags: linux-amd64
   when:
     event:
@@ -112,12 +112,12 @@ steps:
   settings:
     auto_tag: true
     auto_tag_suffix: linux-amd64
-    cache_from: appleboy/drone-telegram
+    cache_from: appleboy/drone-git-push
     daemon_off: false
     dockerfile: docker/Dockerfile.linux.amd64
     password:
       from_secret: docker_password
-    repo: appleboy/drone-telegram
+    repo: appleboy/drone-git-push
     username:
       from_secret: docker_username
   when:
@@ -147,7 +147,7 @@ steps:
   pull: always
   image: golang:1.13
   commands:
-  - go build -v -ldflags '-X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/arm64/drone-telegram
+  - go build -v -ldflags '-X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/arm64/drone-git-push
   environment:
     CGO_ENABLED: 0
   when:
@@ -159,7 +159,7 @@ steps:
   pull: always
   image: golang:1.13
   commands:
-  - go build -v -ldflags '-X main.version=${DRONE_TAG##v} -X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/arm64/drone-telegram
+  - go build -v -ldflags '-X main.version=${DRONE_TAG##v} -X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/arm64/drone-git-push
   environment:
     CGO_ENABLED: 0
   when:
@@ -170,16 +170,16 @@ steps:
   pull: always
   image: golang:1.13
   commands:
-  - ./release/linux/arm64/drone-telegram --help
+  - ./release/linux/arm64/drone-git-push --help
 
 - name: dryrun
   pull: always
   image: plugins/docker:linux-arm64
   settings:
-    cache_from: appleboy/drone-telegram
+    cache_from: appleboy/drone-git-push
     dockerfile: docker/Dockerfile.linux.arm64
     dry_run: true
-    repo: appleboy/drone-telegram
+    repo: appleboy/drone-git-push
     tags: linux-arm64
   when:
     event:
@@ -191,12 +191,12 @@ steps:
   settings:
     auto_tag: true
     auto_tag_suffix: linux-arm64
-    cache_from: appleboy/drone-telegram
+    cache_from: appleboy/drone-git-push
     daemon_off: false
     dockerfile: docker/Dockerfile.linux.arm64
     password:
       from_secret: docker_password
-    repo: appleboy/drone-telegram
+    repo: appleboy/drone-git-push
     username:
       from_secret: docker_username
   when:
@@ -226,7 +226,7 @@ steps:
   pull: always
   image: golang:1.13
   commands:
-  - go build -v -ldflags '-X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/arm/drone-telegram
+  - go build -v -ldflags '-X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/arm/drone-git-push
   environment:
     CGO_ENABLED: 0
   when:
@@ -238,7 +238,7 @@ steps:
   pull: always
   image: golang:1.13
   commands:
-  - go build -v -ldflags '-X main.version=${DRONE_TAG##v} -X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/arm/drone-telegram
+  - go build -v -ldflags '-X main.version=${DRONE_TAG##v} -X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/arm/drone-git-push
   environment:
     CGO_ENABLED: 0
   when:
@@ -249,16 +249,16 @@ steps:
   pull: always
   image: golang:1.13
   commands:
-  - ./release/linux/arm/drone-telegram --help
+  - ./release/linux/arm/drone-git-push --help
 
 - name: dryrun
   pull: always
   image: plugins/docker:linux-arm
   settings:
-    cache_from: appleboy/drone-telegram
+    cache_from: appleboy/drone-git-push
     dockerfile: docker/Dockerfile.linux.arm
     dry_run: true
-    repo: appleboy/drone-telegram
+    repo: appleboy/drone-git-push
     tags: linux-arm
   when:
     event:
@@ -270,12 +270,12 @@ steps:
   settings:
     auto_tag: true
     auto_tag_suffix: linux-arm
-    cache_from: appleboy/drone-telegram
+    cache_from: appleboy/drone-git-push
     daemon_off: false
     dockerfile: docker/Dockerfile.linux.arm
     password:
       from_secret: docker_password
-    repo: appleboy/drone-telegram
+    repo: appleboy/drone-git-push
     username:
       from_secret: docker_username
   when:

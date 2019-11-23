@@ -1,5 +1,5 @@
 local pipeline = import 'pipeline.libsonnet';
-local name = 'drone-telegram';
+local name = 'drone-git-push';
 
 [
   pipeline.test,
