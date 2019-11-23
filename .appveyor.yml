@@ -18,12 +18,13 @@ branches:
     - master
 
 install:
-  - echo %PATH%
-  - echo %GOPATH%
-  - set PATH=%GOPATH%\bin;c:\go\bin;%PATH%
   - go version
   - go env
-  - docker version
+  - ps: |
+      docker version
+      go version
+  - ps: |
+      $env:Path = "c:\gopath\bin;$env:Path"
 
 build_script:
   - ps: |
