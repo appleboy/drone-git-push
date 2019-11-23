@@ -5,5 +5,5 @@ LABEL maintainer="Bo-Yi Wu <appleboy.tw@gmail.com>" \
   org.label-schema.vendor="Bo-Yi Wu" \
   org.label-schema.schema-version="1.0"
 
-ADD release/drone-git-push.exe /drone-git-push.exe
-ENTRYPOINT [ "\\drone-git-push.exe" ]
+ADD release/drone-git-push.exe C:/bin/drone-git-push.exe
+ENTRYPOINT [ "C:\\bin\\drone-git-push.exe" ]
