@@ -29,6 +29,7 @@ install:
 build_script:
   - ps: |
       echo $env:DOCKER_PASSWORD | docker login --username $env:DOCKER_USERNAME --password-stdin
+      go mod download
       if ( $env:APPVEYOR_REPO_TAG -eq 'false' ) {
         go build -ldflags "-X main.Version=$env:APPVEYOR_REPO_COMMIT -X main.BuildNum=$env:APPVEYOR_BUILD_VERSION" -a -o release/drone-git-push.exe
       } else {
