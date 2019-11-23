@@ -4,7 +4,7 @@ title: Git Push
 author: appleboy
 tags: [ deploy, publish, git-push ]
 repo: appleboy/drone-git-push
-logo: git-push.svg
+logo: git.svg
 image: appleboy/drone-git-push
 ---
 
