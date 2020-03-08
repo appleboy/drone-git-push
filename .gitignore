@@ -24,6 +24,6 @@ _testmain.go
 *.prof
 .env
 
-coverage.out
 drone-git-push
 release
+coverage.txt
