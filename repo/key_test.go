@@ -15,6 +15,16 @@ func TestWriteToken(t *testing.T) {
 		wantErr bool
 	}{
 		{
+			name: "don't support git protocol",
+			args: args{
+				remote:   "git@github.com:foo/bar.git",
+				login:    "foo",
+				password: "bar",
+			},
+			want:    "git@github.com:foo/bar.git",
+			wantErr: true,
+		},
+		{
 			name: "missing token",
 			args: args{
 				remote: "https://github.com/foo/bar.git",
