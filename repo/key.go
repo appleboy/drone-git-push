@@ -3,6 +3,7 @@ package repo
 import (
 	"fmt"
 	"io/ioutil"
+	"net/url"
 	"os"
 	"os/user"
 	"path/filepath"
@@ -80,4 +81,21 @@ func WriteNetrc(machine, login, password string) error {
 		netpath,
 		[]byte(netrcContent),
 		0600)
+}
+
+// WriteToken authenticate with Git hosting using a token.
+func WriteToken(remote string, login, password string) (string, error) {
+	if remote == "" || login == "" || password == "" {
+		return remote, nil
+	}
+
+	u, err := url.Parse(remote)
+
+	if err != nil {
+		return remote, err
+	}
+
+	u.User = url.UserPassword(login, password)
+
+	return u.String(), nil
 }

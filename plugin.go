@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/appleboy/drone-git-push/repo"
 	"os"
+
+	"github.com/appleboy/drone-git-push/repo"
 )
 
 type (
@@ -67,6 +68,10 @@ func (p Plugin) Exec() error {
 		return err
 	}
 
+	if err := p.WriteToken(); err != nil {
+		return err
+	}
+
 	if err := p.HandleCommit(); err != nil {
 		return err
 	}
@@ -115,6 +120,19 @@ func (p Plugin) WriteNetrc() error {
 		p.Netrc.Login,
 		p.Netrc.Password,
 	)
+}
+
+// WriteToken writes token.
+func (p Plugin) WriteToken() error {
+	var err error
+
+	p.Config.Remote, err = repo.WriteToken(
+		p.Config.Remote,
+		p.Netrc.Login,
+		p.Netrc.Password,
+	)
+
+	return err
 }
 
 // HandleRemote adds the git remote if required.
