@@ -15,6 +15,15 @@ var (
 )
 
 func main() {
+	// Load env-file if it exists first
+	if filename, found := os.LookupEnv("PLUGIN_ENV_FILE"); found {
+		godotenv.Load(filename)
+	}
+
+	if _, err := os.Stat("/run/drone/env"); err == nil {
+		godotenv.Overload("/run/drone/env")
+	}
+
 	app := cli.NewApp()
 	app.Name = "git-push plugin"
 	app.Usage = "git-push plugin"
@@ -115,10 +124,6 @@ func main() {
 			Usage:   "bypasses the pre-commit and commit-msg hooks",
 			EnvVars: []string{"PLUGIN_NO_VERIFY", "GIT_PUSH_NO_VERIFY"},
 		},
-		&cli.StringFlag{
-			Name:  "env-file",
-			Usage: "source env file",
-		},
 	}
 
 	if BuildNum != "" {
@@ -131,10 +136,6 @@ func main() {
 }
 
 func run(c *cli.Context) error {
-	if c.String("env-file") != "" {
-		_ = godotenv.Load(c.String("env-file"))
-	}
-
 	plugin := Plugin{
 		Netrc: Netrc{
 			Login:    c.String("netrc.username"),
