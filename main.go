@@ -44,17 +44,17 @@ func main() {
 		&cli.StringFlag{
 			Name:    "netrc.machine",
 			Usage:   "netrc machine",
-			EnvVars: []string{"DRONE_NETRC_MACHINE"},
+			EnvVars: []string{"PLUGIN_NETRC_MACHINE,DRONE_NETRC_MACHINE"},
 		},
 		&cli.StringFlag{
 			Name:    "netrc.username",
 			Usage:   "netrc username",
-			EnvVars: []string{"DRONE_NETRC_USERNAME"},
+			EnvVars: []string{"PLUGIN_USERNAME,DRONE_NETRC_USERNAME,GITHUB_USERNAME"},
 		},
 		&cli.StringFlag{
 			Name:    "netrc.password",
 			Usage:   "netrc password",
-			EnvVars: []string{"DRONE_NETRC_PASSWORD"},
+			EnvVars: []string{"PLUGIN_PASSWORD,DRONE_NETRC_PASSWORD,GITHUB_PASSWORD"},
 		},
 		&cli.StringFlag{
 			Name:    "ssh-key",
