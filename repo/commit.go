@@ -27,6 +27,19 @@ func Add() *exec.Cmd {
 	return cmd
 }
 
+// Tag add tag to the working tree.
+func Tag(tag string) *exec.Cmd {
+	cmd := exec.Command(
+		"git",
+		"tag",
+		"-a",
+		tag,
+		"-m",
+		tag)
+
+	return cmd
+}
+
 // TestCleanTree returns non-zero if diff between index and local repository
 func TestCleanTree() *exec.Cmd {
 	cmd := exec.Command(

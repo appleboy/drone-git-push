@@ -80,6 +80,9 @@ commit_message
 empty_commit
 : if you only want generate an empty commit, you can do it using this option
 
+tag
+: if you want to add a tag to the commit, you can do it using this option. You must also set `followtags` to `true` if you want the tag to be pushed to the remote
+
 author_name
 : the name to use for the author of the commit (if blank, assume push commiter name)
 
