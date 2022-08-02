@@ -1,15 +1,14 @@
 module github.com/appleboy/drone-git-push
 
-go 1.13
+go 1.18
 
 require (
-	github.com/chavacava/garif v0.0.0-20220624065725-d6fd61e6a499 // indirect
-	github.com/joho/godotenv v1.3.0
-	github.com/mattn/go-colorable v0.1.12 // indirect
-	github.com/mattn/go-runewidth v0.0.13 // indirect
-	github.com/mgechev/revive v1.2.1 // indirect
-	github.com/sirupsen/logrus v1.3.0
-	github.com/urfave/cli/v2 v2.0.0
-	golang.org/x/sys v0.0.0-20220624220833-87e55d714810 // indirect
-	golang.org/x/tools v0.1.11 // indirect
+	github.com/joho/godotenv v1.4.0
+	github.com/urfave/cli/v2 v2.11.1
+)
+
+require (
+	github.com/cpuguy83/go-md2man/v2 v2.0.2 // indirect
+	github.com/russross/blackfriday/v2 v2.1.0 // indirect
+	github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 // indirect
 )

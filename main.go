@@ -1,10 +1,10 @@
 package main
 
 import (
+	"log"
 	"os"
 
 	"github.com/joho/godotenv"
-	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
 )
 
@@ -17,11 +17,11 @@ var (
 func main() {
 	// Load env-file if it exists first
 	if filename, found := os.LookupEnv("PLUGIN_ENV_FILE"); found {
-		godotenv.Load(filename)
+		_ = godotenv.Load(filename)
 	}
 
 	if _, err := os.Stat("/run/drone/env"); err == nil {
-		godotenv.Overload("/run/drone/env")
+		_ = godotenv.Overload("/run/drone/env")
 	}
 
 	app := cli.NewApp()
@@ -136,7 +136,7 @@ func main() {
 	}
 
 	if err := app.Run(os.Args); err != nil {
-		logrus.Fatal(err)
+		log.Fatal(err)
 	}
 }
 

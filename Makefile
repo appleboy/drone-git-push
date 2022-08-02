@@ -1,6 +1,6 @@
 DIST := dist
 EXECUTABLE := drone-git-push
-GOFMT ?= gofmt "-s"
+GOFMT ?= gofumpt -l
 GO ?= go
 
 # for dockerhub
@@ -26,35 +26,29 @@ endif
 
 all: build
 
-fmt:
-	$(GOFMT) -w $(SOURCES)
-
 vet:
 	$(GO) vet ./...
 
+.PHONY: lint
 lint:
-	@hash revive > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
-		$(GO) get -u github.com/mgechev/revive; \
+	@hash golangci-lint > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
+		curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.46.2; \
 	fi
-	revive -config .revive.toml ./... || exit 1
+	golangci-lint run -v --deadline=3m --timeout 90s
 
-.PHONY: misspell-check
-misspell-check:
-	@hash misspell > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
-		$(GO) get -u github.com/client9/misspell/cmd/misspell; \
+.PHONY: fmt
+fmt:
+	@hash gofumpt > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
+		$(GO) get -u mvdan.cc/gofumpt; \
 	fi
-	misspell -error $(SOURCES)
-
-.PHONY: misspell
-misspell:
-	@hash misspell > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
-		$(GO) get -u github.com/client9/misspell/cmd/misspell; \
-	fi
-	misspell -w $(SOURCES)
+	$(GOFMT) -w $(GOFILES)
 
 .PHONY: fmt-check
 fmt-check:
-	@diff=$$($(GOFMT) -d $(SOURCES)); \
+	@hash gofumpt > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
+		$(GO) install mvdan.cc/gofumpt@latest; \
+	fi
+	@diff=$$($(GOFMT) -d $(GOFILES)); \
 	if [ -n "$$diff" ]; then \
 		echo "Please run 'make fmt' and commit the result:"; \
 		echo "$${diff}"; \
@@ -103,17 +97,6 @@ build_linux_arm:
 
 docker_image:
 	docker build -t $(DEPLOY_ACCOUNT)/$(DEPLOY_IMAGE) .
-
-docker: docker_image
-
-docker_deploy:
-ifeq ($(tag),)
-	@echo "Usage: make $@ tag=<tag>"
-	@exit 1
-endif
-	# deploy image
-	docker tag $(DEPLOY_ACCOUNT)/$(DEPLOY_IMAGE):latest $(DEPLOY_ACCOUNT)/$(DEPLOY_IMAGE):$(tag)
-	docker push $(DEPLOY_ACCOUNT)/$(DEPLOY_IMAGE):$(tag)
 
 coverage:
 	sed -i '/main.go/d' coverage.txt
