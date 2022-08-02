@@ -31,7 +31,7 @@ func WriteKey(privateKey string) error {
 		home,
 		".ssh")
 
-	if err := os.MkdirAll(sshpath, 0700); err != nil {
+	if err := os.MkdirAll(sshpath, 0o700); err != nil {
 		return err
 	}
 
@@ -43,15 +43,15 @@ func WriteKey(privateKey string) error {
 		sshpath,
 		"id_rsa")
 
-	ioutil.WriteFile(
+	_ = ioutil.WriteFile(
 		confpath,
 		[]byte("StrictHostKeyChecking no\n"),
-		0700)
+		0o700)
 
 	return ioutil.WriteFile(
 		privpath,
 		[]byte(privateKey),
-		0600)
+		0o600)
 }
 
 // WriteNetrc writes the netrc file.
@@ -80,7 +80,7 @@ func WriteNetrc(machine, login, password string) error {
 	return ioutil.WriteFile(
 		netpath,
 		[]byte(netrcContent),
-		0600)
+		0o600)
 }
 
 // WriteToken authenticate with Git hosting using a token.
@@ -90,7 +90,6 @@ func WriteToken(remote string, login, password string) (string, error) {
 	}
 
 	u, err := url.Parse(remote)
-
 	if err != nil {
 		return remote, err
 	}
