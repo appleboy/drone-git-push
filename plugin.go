@@ -38,6 +38,7 @@ type (
 		SkipVerify    bool
 		Commit        bool
 		CommitMessage string
+		Tag           string
 		EmptyCommit   bool
 		NoVerify      bool
 	}
@@ -73,6 +74,10 @@ func (p Plugin) Exec() error {
 	}
 
 	if err := p.HandleCommit(); err != nil {
+		return err
+	}
+
+	if err := p.HandleTag(); err != nil {
 		return err
 	}
 
@@ -176,6 +181,17 @@ func (p Plugin) HandleCommit() error {
 					return err
 				}
 			}
+		}
+	}
+
+	return nil
+}
+
+// HandleTag add tag if required.
+func (p Plugin) HandleTag() error {
+	if p.Config.Tag != "" {
+		if err := execute(repo.Tag(p.Config.Tag)); err != nil {
+			return err
 		}
 	}
 

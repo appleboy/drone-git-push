@@ -114,6 +114,11 @@ func main() {
 			Usage:   "commit message",
 			EnvVars: []string{"PLUGIN_COMMIT_MESSAGE", "GIT_PUSH_COMMIT_MESSAGE"},
 		},
+		&cli.StringFlag{
+			Name:    "tag",
+			Usage:   "tag to add to the commit",
+			EnvVars: []string{"PLUGIN_TAG", "GIT_PUSH_TAG"},
+		},
 		&cli.BoolFlag{
 			Name:    "empty-commit",
 			Usage:   "empty commit",
@@ -160,6 +165,7 @@ func run(c *cli.Context) error {
 			SkipVerify:    c.Bool("skip-verify"),
 			Commit:        c.Bool("commit"),
 			CommitMessage: c.String("commit-message"),
+			Tag:           c.String("tag"),
 			EmptyCommit:   c.Bool("empty-commit"),
 			NoVerify:      c.Bool("no-verify"),
 		},
