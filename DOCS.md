@@ -17,7 +17,7 @@ repo to being able to push changes.
   image: appleboy/drone-git-push
   settings:
     branch: master
-    remote: git@git.heroku.com:falling-wind-1624.git
+    remote: ssh://git@git.heroku.com/falling-wind-1624.git
     force: false
     commit: true
 ```
