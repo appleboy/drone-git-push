@@ -5,9 +5,8 @@
 [![Go Doc](https://godoc.org/github.com/appleboy/drone-git-push?status.svg)](http://godoc.org/github.com/appleboy/drone-git-push)
 [![Go Report](https://goreportcard.com/badge/github.com/appleboy/drone-git-push)](https://goreportcard.com/report/github.com/appleboy/drone-git-push)
 
-Drone plugin to push changes to a remote `git` repository. For the usage
-information and a listing of the available options please take a look at
-[the docs](DOCS.md).
+[Drone](https://www.drone.io/) / [Woodpecker](https://woodpecker-ci.org/) plugin to push changes to a remote `git` repository.
+For the usage information and a listing of the available options please take a look at [the docs](DOCS.md).
 
 ## Build
 
