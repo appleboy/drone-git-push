@@ -1,11 +1,17 @@
 ---
 date: 2019-11-23T00:00:00+00:00
+name: Git Push
 title: Git Push
+description: Commit and push to an git repo via SSH
+authors: appleboy
 author: appleboy
 tags: [ deploy, publish, git-push ]
 repo: appleboy/drone-git-push
 logo: git.svg
 image: appleboy/drone-git-push
+containerImage: appleboy/drone-git-push
+containerImageUrl: https://hub.docker.com/r/appleboy/drone-git-push
+url: https://github.com/appleboy/drone-git-push
 ---
 
 Use this plugin for deploying an application via `git push`. You will need to
