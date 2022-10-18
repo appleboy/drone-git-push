@@ -8,6 +8,7 @@ author: appleboy
 tags: [ deploy, publish, git-push ]
 repo: appleboy/drone-git-push
 logo: git.svg
+icon: https://raw.githubusercontent.com/appleboy/drone-git-push/master/images/logo.svg
 image: appleboy/drone-git-push
 containerImage: appleboy/drone-git-push
 containerImageUrl: https://hub.docker.com/r/appleboy/drone-git-push
