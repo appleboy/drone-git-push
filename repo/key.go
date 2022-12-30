@@ -2,7 +2,6 @@ package repo
 
 import (
 	"fmt"
-	"io/ioutil"
 	"net/url"
 	"os"
 	"os/user"
@@ -43,12 +42,12 @@ func WriteKey(privateKey string) error {
 		sshpath,
 		"id_rsa")
 
-	_ = ioutil.WriteFile(
+	_ = os.WriteFile(
 		confpath,
 		[]byte("StrictHostKeyChecking no\n"),
 		0o700)
 
-	return ioutil.WriteFile(
+	return os.WriteFile(
 		privpath,
 		[]byte(privateKey),
 		0o600)
@@ -77,7 +76,7 @@ func WriteNetrc(machine, login, password string) error {
 		home,
 		".netrc")
 
-	return ioutil.WriteFile(
+	return os.WriteFile(
 		netpath,
 		[]byte(netrcContent),
 		0o600)
