@@ -28,7 +28,7 @@ jobs:
 
       - name: Check binary
         run : |
-          ./release/linux/amd64/drone-ssh --help
+          ./release/linux/amd64/drone-scp --help
 
       -
         name: Set up QEMU
@@ -61,8 +61,8 @@ jobs:
             latest=false
             suffix=linux-amd64
           images: |
-            appleboy/drone-ssh
-            ghcr.io/appleboy/drone-ssh
+            appleboy/drone-scp
+            ghcr.io/appleboy/drone-scp
           tags: |
             type=raw,value=,enable={{is_default_branch}}
             type=raw,value=latest,suffix=,enable={{is_default_branch}}
@@ -90,8 +90,8 @@ jobs:
             latest=false
             suffix=linux-arm64
           images: |
-            appleboy/drone-ssh
-            ghcr.io/appleboy/drone-ssh
+            appleboy/drone-scp
+            ghcr.io/appleboy/drone-scp
           tags: |
             type=raw,value=,enable={{is_default_branch}}
             type=semver,event=tag,pattern={{version}},suffix=-linux-arm64
@@ -118,8 +118,8 @@ jobs:
             latest=false
             suffix=linux-arm
           images: |
-            appleboy/drone-ssh
-            ghcr.io/appleboy/drone-ssh
+            appleboy/drone-scp
+            ghcr.io/appleboy/drone-scp
           tags: |
             type=raw,value=,enable={{is_default_branch}}
             type=semver,event=tag,pattern={{version}},suffix=-linux-arm
