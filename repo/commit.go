@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"fmt"
 	"os/exec"
 )
 
@@ -53,7 +54,7 @@ func TestCleanTree() *exec.Cmd {
 }
 
 // EmptyCommit simply create an empty commit
-func EmptyCommit(msg string, noVerify bool) *exec.Cmd {
+func EmptyCommit(msg string, noVerify bool, authorName, authorEmail string) *exec.Cmd {
 	if msg == "" {
 		msg = defaultCommitMessage
 	}
@@ -72,11 +73,17 @@ func EmptyCommit(msg string, noVerify bool) *exec.Cmd {
 			"--no-verify")
 	}
 
+	if authorName != "" || authorEmail != "" {
+		cmd.Args = append(
+			cmd.Args,
+			fmt.Sprintf("-a=\"%q <%q>\"", authorName, authorEmail))
+	}
+
 	return cmd
 }
 
 // ForceCommit commits every change while skipping CI.
-func ForceCommit(msg string, noVerify bool) *exec.Cmd {
+func ForceCommit(msg string, noVerify bool, authorName, authorEmail string) *exec.Cmd {
 	if msg == "" {
 		msg = defaultCommitMessage
 	}
@@ -92,6 +99,12 @@ func ForceCommit(msg string, noVerify bool) *exec.Cmd {
 		cmd.Args = append(
 			cmd.Args,
 			"--no-verify")
+	}
+
+	if authorName != "" || authorEmail != "" {
+		cmd.Args = append(
+			cmd.Args,
+			fmt.Sprintf("-a=\"%q <%q>\"", authorName, authorEmail))
 	}
 
 	return cmd
