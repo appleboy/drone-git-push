@@ -46,6 +46,9 @@ jobs:
 
       - name: testing
         run: |
+          git config --global init.defaultBranch master
+          git init
+          git config --global --add safe.directory /__w/drone-git-push/drone-git-push
           make test
 
       - name: Upload coverage to Codecov
