@@ -40,6 +40,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: add git make command
+        run: |
+          apk add git make curl perl bash build-base zlib-dev ucl-dev
+
       - name: testing
         run: |
           make test
