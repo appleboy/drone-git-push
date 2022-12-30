@@ -1,18 +1,19 @@
 DIST := dist
 EXECUTABLE := drone-git-push
-GOFMT ?= gofumpt -l -s
+GOFMT ?= gofumpt -l
 DIST := dist
 DIST_DIRS := $(DIST)/binaries $(DIST)/release
 GO ?= go
 SHASUM ?= shasum -a 256
+GOFILES := $(shell find . -name "*.go" -type f)
 HAS_GO = $(shell hash $(GO) > /dev/null 2>&1 && echo "GO" || echo "NOGO" )
 XGO_PACKAGE ?= src.techknowlogick.com/xgo@latest
-XGO_VERSION := go-1.18.x
-GXZ_PAGAGE ?= github.com/ulikunitz/xz/cmd/gxz@v0.5.10
+XGO_VERSION := go-1.19.x
+GXZ_PAGAGE ?= github.com/ulikunitz/xz/cmd/gxz@v0.5.11
 
 LINUX_ARCHS ?= linux/amd64,linux/arm64
-DARWIN_ARCHS ?= darwin-12/amd64,darwin-12/arm64
-WINDOWS_ARCHS ?= windows/amd64
+DARWIN_ARCHS ?= darwin-10.12/amd64,darwin-10.12/arm64
+WINDOWS_ARCHS ?= windows/*
 
 ifneq ($(shell uname), Darwin)
 	EXTLDFLAGS = -extldflags "-static" $(null)
@@ -39,24 +40,10 @@ else
 	EXECUTABLE ?= $(EXECUTABLE)
 endif
 
-STORED_VERSION_FILE := VERSION
-
 ifneq ($(DRONE_TAG),)
-	VERSION ?= $(subst v,,$(DRONE_TAG))
-	RELASE_VERSION ?= $(VERSION)
+	VERSION ?= $(DRONE_TAG)
 else
-	ifneq ($(DRONE_BRANCH),)
-		VERSION ?= $(subst release/v,,$(DRONE_BRANCH))
-	else
-		VERSION ?= master
-	endif
-
-	STORED_VERSION=$(shell cat $(STORED_VERSION_FILE) 2>/dev/null)
-	ifneq ($(STORED_VERSION),)
-		RELASE_VERSION ?= $(STORED_VERSION)
-	else
-		RELASE_VERSION ?= $(shell git describe --tags --always | sed 's/-/+/' | sed 's/^v//')
-	endif
+	VERSION ?= $(shell git describe --tags --always || git rev-parse --short HEAD)
 endif
 
 TAGS ?=
@@ -64,27 +51,19 @@ LDFLAGS ?= -X 'main.Version=$(VERSION)'
 
 all: build
 
-vet:
-	$(GO) vet ./...
-
-.PHONY: lint
-lint:
-	@hash golangci-lint > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
-		curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.46.2; \
-	fi
-	golangci-lint run -v --deadline=3m --timeout 90s
-
-.PHONY: fmt
 fmt:
 	@hash gofumpt > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
-		$(GO) install mvdan.cc/gofumpt@latest; \
+		$(GO) install mvdan.cc/gofumpt; \
 	fi
 	$(GOFMT) -w $(GOFILES)
+
+vet:
+	$(GO) vet ./...
 
 .PHONY: fmt-check
 fmt-check:
 	@hash gofumpt > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
-		$(GO) install mvdan.cc/gofumpt@latest; \
+		$(GO) install mvdan.cc/gofumpt; \
 	fi
 	@diff=$$($(GOFMT) -d $(GOFILES)); \
 	if [ -n "$$diff" ]; then \
@@ -93,16 +72,28 @@ fmt-check:
 		exit 1; \
 	fi;
 
-test: fmt-check
+test:
 	@$(GO) test -v -cover -coverprofile coverage.txt ./... && echo "\n==>\033[32m Ok\033[m\n" || exit 1
 
-install: $(SOURCES)
+install: $(GOFILES)
 	$(GO) install -v -tags '$(TAGS)' -ldflags '$(EXTLDFLAGS)-s -w $(LDFLAGS)'
 
 build: $(EXECUTABLE)
 
-$(EXECUTABLE): $(SOURCES)
+$(EXECUTABLE): $(GOFILES)
 	$(GO) build -v -tags '$(TAGS)' -ldflags '$(EXTLDFLAGS)-s -w $(LDFLAGS)' -o $@
+
+build_linux_amd64:
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GO) build -a -tags '$(TAGS)' -ldflags '$(EXTLDFLAGS)-s -w $(LDFLAGS)' -o release/linux/amd64/$(DEPLOY_IMAGE)
+
+build_linux_i386:
+	CGO_ENABLED=0 GOOS=linux GOARCH=386 $(GO) build -a -tags '$(TAGS)' -ldflags '$(EXTLDFLAGS)-s -w $(LDFLAGS)' -o release/linux/i386/$(DEPLOY_IMAGE)
+
+build_linux_arm64:
+	CGO_ENABLED=0 GOOS=linux GOARCH=arm64 $(GO) build -a -tags '$(TAGS)' -ldflags '$(EXTLDFLAGS)-s -w $(LDFLAGS)' -o release/linux/arm64/$(DEPLOY_IMAGE)
+
+build_linux_arm:
+	CGO_ENABLED=0 GOOS=linux GOARCH=arm GOARM=7 $(GO) build -a -tags '$(TAGS)' -ldflags '$(EXTLDFLAGS)-s -w $(LDFLAGS)' -o release/linux/arm/$(DEPLOY_IMAGE)
 
 coverage:
 	sed -i '/main.go/d' coverage.txt
@@ -114,7 +105,7 @@ deps-backend:
 	$(GO) install $(XGO_PACKAGE)
 
 .PHONY: release
-release: release-windows release-linux release-darwin release-copy release-compress release-check
+release: release-linux release-darwin release-windows release-copy release-compress release-check
 
 $(DIST_DIRS):
 	mkdir -p $(DIST_DIRS)
@@ -151,7 +142,6 @@ release-check: | $(DIST_DIRS)
 .PHONY: release-compress
 release-compress: | $(DIST_DIRS)
 	cd $(DIST)/release/; for file in `find . -type f -name "*"`; do echo "compressing $${file}" && $(GO) run $(GXZ_PAGAGE) -k -9 $${file}; done;
-
 
 clean:
 	$(GO) clean -x -i ./...
