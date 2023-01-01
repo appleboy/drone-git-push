@@ -36,6 +36,11 @@ jobs:
         run : |
           make build_${{ matrix.system }}_${{ matrix.arch }}
 
+      - name: Check binary
+        if: matrix.system == 'linux' && matrix.arch == 'amd64'
+        run : |
+          ./release/${{ matrix.system }}/${{ matrix.arch }}/${GITHUB_REPOSITORY#*/} --help
+
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2
