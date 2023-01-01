@@ -73,8 +73,8 @@ jobs:
             latest=false
             suffix=${{ matrix.system }}-${{ matrix.arch }}
           images: |
-            appleboy/drone-git-push
-            ghcr.io/appleboy/drone-git-push
+            ${{ github.repository }}
+            ghcr.io/${{ github.repository }}
           tags: |
             type=raw,value=,enable={{is_default_branch}}
             type=raw,value=latest,suffix=,enable={{is_default_branch}}
