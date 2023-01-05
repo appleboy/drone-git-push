@@ -1,10 +1,10 @@
 # drone-git-push
 
 [![GoDoc](https://godoc.org/github.com/appleboy/drone-git-push?status.svg)](https://godoc.org/github.com/appleboy/drone-git-push)
-[![Lint and Testing](https://github.com/appleboy/drone-git-push/actions/workflows/lint.yml/badge.svg)](https://github.com/appleboy/drone-git-push/actions/workflows/lint.yml)
-[![codecov](https://codecov.io/gh/appleboy/drone-git-push/branch/master/graph/badge.svg)](https://codecov.io/gh/appleboy/drone-git-push)
-[![Go Report Card](https://goreportcard.com/badge/github.com/appleboy/drone-git-push)](https://goreportcard.com/report/github.com/appleboy/drone-git-push)
-[![Docker Pulls](https://img.shields.io/docker/pulls/appleboy/drone-git-push.svg)](https://hub.docker.com/r/appleboy/drone-git-push/)
+[![Lint and Testing](https://github.com/JonasBernard/drone-git-push/actions/workflows/lint.yml/badge.svg)](https://github.com/JonasBernard/drone-git-push/actions/workflows/lint.yml)
+[![codecov](https://codecov.io/gh/JonasBernard/drone-git-push/branch/master/graph/badge.svg)](https://codecov.io/gh/JonasBernard/drone-git-push)
+[![Go Report Card](https://goreportcard.com/badge/github.com/JonasBernard/drone-git-push)](https://goreportcard.com/report/github.com/JonasBernard/drone-git-push)
+[![Docker Pulls](https://img.shields.io/docker/pulls/jonasbernard/drone-git-push.svg)](https://hub.docker.com/r/jonasbernard/drone-git-push/)
 
 [Drone](https://www.drone.io/) / [Woodpecker](https://woodpecker-ci.org/) plugin to push changes to a remote `git` repository.
 For the usage information and a listing of the available options please take a look at [the docs](DOCS.md).
