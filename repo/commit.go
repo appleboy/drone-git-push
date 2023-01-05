@@ -104,7 +104,7 @@ func ForceCommit(msg string, noVerify bool, authorName, authorEmail string) *exe
 	if authorName != "" || authorEmail != "" {
 		cmd.Args = append(
 			cmd.Args,
-			fmt.Sprintf("-a=\"%q <%q>\"", authorName, authorEmail))
+			fmt.Sprintf("--auther=\"%q <%q>\"", authorName, authorEmail))
 	}
 
 	return cmd
