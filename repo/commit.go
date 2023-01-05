@@ -3,7 +3,6 @@ package repo
 import (
 	"fmt"
 	"os/exec"
-	"strings"
 )
 
 const defaultCommitMessage = "[skip ci] Commit dirty state"
@@ -77,7 +76,7 @@ func EmptyCommit(msg string, noVerify bool, authorName, authorEmail string) *exe
 	if authorName != "" || authorEmail != "" {
 		cmd.Args = append(
 			cmd.Args,
-			fmt.Sprintf("--author=\"%q <%q>\"", strings.Trim(authorName, "\""), strings.Trim(authorEmail, "\"")))
+			fmt.Sprintf("--author=\"%s <%q>\"", authorName, authorEmail))
 	}
 
 	return cmd
@@ -105,7 +104,7 @@ func ForceCommit(msg string, noVerify bool, authorName, authorEmail string) *exe
 	if authorName != "" || authorEmail != "" {
 		cmd.Args = append(
 			cmd.Args,
-			fmt.Sprintf("--author=\"%q <%q>\"", strings.Trim(authorName, "\""), strings.Trim(authorEmail, "\"")))
+			fmt.Sprintf("--author=\"%s <%s>\"", authorName, authorEmail))
 	}
 
 	return cmd
