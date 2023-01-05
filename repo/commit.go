@@ -77,7 +77,7 @@ func EmptyCommit(msg string, noVerify bool, authorName, authorEmail string) *exe
 	if authorName != "" || authorEmail != "" {
 		cmd.Args = append(
 			cmd.Args,
-			fmt.Sprintf("--auther=\"%q <%q>\"", strings.Trim(authorName, "\""), strings.Trim(authorEmail, "\"")))
+			fmt.Sprintf("--author=\"%q <%q>\"", strings.Trim(authorName, "\""), strings.Trim(authorEmail, "\"")))
 	}
 
 	return cmd
@@ -105,7 +105,7 @@ func ForceCommit(msg string, noVerify bool, authorName, authorEmail string) *exe
 	if authorName != "" || authorEmail != "" {
 		cmd.Args = append(
 			cmd.Args,
-			fmt.Sprintf("--auther=\"%q <%q>\"", strings.Trim(authorName, "\""), strings.Trim(authorEmail, "\"")))
+			fmt.Sprintf("--author=\"%q <%q>\"", strings.Trim(authorName, "\""), strings.Trim(authorEmail, "\"")))
 	}
 
 	return cmd
