@@ -1,4 +1,7 @@
-FROM plugins/base:linux-arm64
+FROM alpine:3.17
+
+ARG TARGETOS
+ARG TARGETARCH
 
 LABEL maintainer="Bo-Yi Wu <appleboy.tw@gmail.com>" \
   org.label-schema.name="Drone Git Push" \
@@ -8,6 +11,6 @@ LABEL maintainer="Bo-Yi Wu <appleboy.tw@gmail.com>" \
 RUN apk add --no-cache ca-certificates git openssh curl perl && \
   rm -rf /var/cache/apk/*
 
-COPY release/linux/arm64/drone-git-push /bin/
+COPY release/${TARGETOS}/${TARGETARCH}/drone-git-push /bin/
 
 ENTRYPOINT ["/bin/drone-git-push"]

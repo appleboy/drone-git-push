@@ -1,9 +1,0 @@
-FROM microsoft/nanoserver:10.0.14393.1884
-
-LABEL maintainer="Bo-Yi Wu <appleboy.tw@gmail.com>" \
-  org.label-schema.name="Drone Git Push" \
-  org.label-schema.vendor="Bo-Yi Wu" \
-  org.label-schema.schema-version="1.0"
-
-COPY release/windows/arm64/drone-git-push.exe  C:/bin/drone-git-push.exe
-ENTRYPOINT [ "C:\\bin\\drone-git-push.exe" ]
