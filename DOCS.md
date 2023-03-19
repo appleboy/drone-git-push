@@ -70,3 +70,4 @@ An example of specifying the path to a repo:
 | author_name    | the name to use for the author of the commit (if blank, assume push commiter name)
 | author_email   | the email address to use for the author of the commit (if blank, assume push commiter name)
 | followtags     | push with --follow-tags option
+| rebase         | pull --rebase before pushing

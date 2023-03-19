@@ -32,6 +32,17 @@ func RemotePush(remote, branch string, force bool, followtags bool) *exec.Cmd {
 	return RemotePushNamedBranch(remote, "HEAD", branch, force, followtags)
 }
 
+func RemotePullRebaseNamedBranch(remote, branch string) *exec.Cmd {
+	cmd := exec.Command(
+		"git",
+		"pull",
+		"--rebase",
+		remote,
+		branch)
+
+	return cmd
+}
+
 // RemotePushNamedBranch puchs changes from a local to a remote branch.
 func RemotePushNamedBranch(remote, localbranch string, branch string, force bool, followtags bool) *exec.Cmd {
 	cmd := exec.Command(

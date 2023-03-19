@@ -129,6 +129,11 @@ func main() {
 			Usage:   "bypasses the pre-commit and commit-msg hooks",
 			EnvVars: []string{"PLUGIN_NO_VERIFY", "GIT_PUSH_NO_VERIFY"},
 		},
+		&cli.BoolFlag{
+			Name:    "rebase",
+			Usage:   "pull rebase branch before push",
+			EnvVars: []string{"PLUGIN_REBASE", "GIT_PUSH_REBASE"},
+		},
 	}
 
 	if BuildNum != "" {
@@ -168,6 +173,7 @@ func run(c *cli.Context) error {
 			Tag:           c.String("tag"),
 			EmptyCommit:   c.Bool("empty-commit"),
 			NoVerify:      c.Bool("no-verify"),
+			Rebase:        c.Bool("rebase"),
 		},
 	}
 
