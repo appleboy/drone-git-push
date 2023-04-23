@@ -94,16 +94,16 @@ func (p Plugin) Exec() error {
 
 // WriteConfig writes all required configurations.
 func (p Plugin) WriteConfig() error {
-	if err := repo.GlobalName(p.Commit.Author.Name).Run(); err != nil {
+	if err := execute(repo.GlobalName(p.Commit.Author.Name)); err != nil {
 		return err
 	}
 
-	if err := repo.GlobalUser(p.Commit.Author.Email).Run(); err != nil {
+	if err := execute(repo.GlobalUser(p.Commit.Author.Email)); err != nil {
 		return err
 	}
 
 	if p.Config.SkipVerify {
-		if err := repo.SkipVerify().Run(); err != nil {
+		if err := execute(repo.SkipVerify()); err != nil {
 			return err
 		}
 	}

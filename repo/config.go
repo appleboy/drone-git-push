@@ -9,7 +9,7 @@ func GlobalUser(email string) *exec.Cmd {
 	cmd := exec.Command(
 		"git",
 		"config",
-		"--global",
+		// "--global",
 		"user.email",
 		email)
 
@@ -21,7 +21,7 @@ func GlobalName(author string) *exec.Cmd {
 	cmd := exec.Command(
 		"git",
 		"config",
-		"--global",
+		// "--global",
 		"user.name",
 		author)
 
