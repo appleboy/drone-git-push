@@ -73,7 +73,7 @@ builds:
   no_unique_dist_dir: true
   hooks:
     post:
-      - cmd: xz -9 {{ .Path }}
+      - cmd: xz -k -9 {{ .Path }}
         dir: ./dist/
 
 archives:
@@ -83,6 +83,8 @@ archives:
 
 checksum:
   name_template: 'checksums.txt'
+  extra_files:
+      - glob: ./**.xz
 
 snapshot:
   name_template: "{{ incpatch .Version }}"

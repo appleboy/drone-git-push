@@ -27,3 +27,4 @@ _testmain.go
 drone-git-push
 release
 coverage.txt
+dist
