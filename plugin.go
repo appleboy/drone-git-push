@@ -41,6 +41,7 @@ type (
 		Tag           string
 		EmptyCommit   bool
 		NoVerify      bool
+		Rebase        bool
 	}
 
 	// Plugin Structure
@@ -82,6 +83,10 @@ func (p Plugin) Exec() error {
 	}
 
 	if err := p.HandleRemote(); err != nil {
+		return err
+	}
+
+	if err := p.HandleRebase(); err != nil {
 		return err
 	}
 
@@ -209,6 +214,22 @@ func (p Plugin) HandlePush() error {
 	)
 
 	return execute(repo.RemotePushNamedBranch(name, local, branch, force, followtags))
+}
+
+// HanldeRebase pull rebases before pushing
+func (p Plugin) HandleRebase() error {
+	if p.Config.Rebase {
+		var (
+			name   = p.Config.RemoteName
+			branch = p.Config.Branch
+		)
+
+		if err := execute(repo.RemotePullRebaseNamedBranch(name, branch)); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 // HandleCleanup does eventually do some cleanup.
