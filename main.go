@@ -3,6 +3,8 @@ package main
 import (
 	"log"
 	"os"
+	"strconv"
+	"time"
 
 	"github.com/joho/godotenv"
 	"github.com/urfave/cli/v2"
@@ -10,8 +12,7 @@ import (
 
 // Version set at compile-time
 var (
-	Version  string
-	BuildNum string
+	Version string
 )
 
 func main() {
@@ -27,6 +28,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "git-push plugin"
 	app.Usage = "git-push plugin"
+	app.Copyright = "Copyright (c) " + strconv.Itoa(time.Now().Year()) + " Bo-Yi Wu"
 	app.Action = run
 	app.Version = Version
 	app.Flags = []cli.Flag{
@@ -134,10 +136,6 @@ func main() {
 			Usage:   "pull rebase branch before push",
 			EnvVars: []string{"PLUGIN_REBASE", "GIT_PUSH_REBASE"},
 		},
-	}
-
-	if BuildNum != "" {
-		app.Version = app.Version + "+" + BuildNum
 	}
 
 	if err := app.Run(os.Args); err != nil {
