@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/appleboy/com/random"
 	"github.com/joho/godotenv"
 	"github.com/urfave/cli/v2"
 )
@@ -71,7 +72,7 @@ func main() {
 		&cli.StringFlag{
 			Name:    "remote-name",
 			Usage:   "name of the remote repo",
-			Value:   "deploy",
+			Value:   "",
 			EnvVars: []string{"PLUGIN_REMOTE_NAME", "GIT_PUSH_REMOTE_NAME", "INPUT_REMOTE_NAME"},
 		},
 		&cli.StringFlag{
@@ -173,6 +174,10 @@ func run(c *cli.Context) error {
 			NoVerify:      c.Bool("no-verify"),
 			Rebase:        c.Bool("rebase"),
 		},
+	}
+
+	if plugin.Config.RemoteName == "" {
+		plugin.Config.RemoteName = random.String(10)
 	}
 
 	return plugin.Exec()
