@@ -1,19 +1,7 @@
-DIST := dist
 EXECUTABLE := drone-git-push
-GOFMT ?= gofumpt -l
-DIST := dist
-DIST_DIRS := $(DIST)/binaries $(DIST)/release
 GO ?= go
-SHASUM ?= shasum -a 256
 GOFILES := $(shell find . -name "*.go" -type f)
 HAS_GO = $(shell hash $(GO) > /dev/null 2>&1 && echo "GO" || echo "NOGO" )
-XGO_PACKAGE ?= src.techknowlogick.com/xgo@latest
-XGO_VERSION := go-1.19.x
-GXZ_PAGAGE ?= github.com/ulikunitz/xz/cmd/gxz@v0.5.11
-
-LINUX_ARCHS ?= linux/amd64,linux/arm64
-DARWIN_ARCHS ?= darwin-10.12/amd64,darwin-10.12/arm64
-WINDOWS_ARCHS ?= windows/*
 
 ifneq ($(shell uname), Darwin)
 	EXTLDFLAGS = -extldflags "-static" $(null)
@@ -51,27 +39,6 @@ LDFLAGS ?= -X 'main.Version=$(VERSION)'
 
 all: build
 
-fmt:
-	@hash gofumpt > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
-		$(GO) install mvdan.cc/gofumpt; \
-	fi
-	$(GOFMT) -w $(GOFILES)
-
-vet:
-	$(GO) vet ./...
-
-.PHONY: fmt-check
-fmt-check:
-	@hash gofumpt > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
-		$(GO) install mvdan.cc/gofumpt; \
-	fi
-	@diff=$$($(GOFMT) -d $(GOFILES)); \
-	if [ -n "$$diff" ]; then \
-		echo "Please run 'make fmt' and commit the result:"; \
-		echo "$${diff}"; \
-		exit 1; \
-	fi;
-
 test:
 	@$(GO) test -v -cover -coverprofile coverage.txt ./... && echo "\n==>\033[32m Ok\033[m\n" || exit 1
 
@@ -89,66 +56,15 @@ build_windows_amd64:
 build_linux_amd64:
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GO) build -a -tags '$(TAGS)' -ldflags '$(EXTLDFLAGS)-s -w $(LDFLAGS)' -o release/linux/amd64/$(EXECUTABLE)
 
-build_linux_i386:
-	CGO_ENABLED=0 GOOS=linux GOARCH=386 $(GO) build -a -tags '$(TAGS)' -ldflags '$(EXTLDFLAGS)-s -w $(LDFLAGS)' -o release/linux/i386/$(EXECUTABLE)
-
 build_linux_arm64:
 	CGO_ENABLED=0 GOOS=linux GOARCH=arm64 $(GO) build -a -tags '$(TAGS)' -ldflags '$(EXTLDFLAGS)-s -w $(LDFLAGS)' -o release/linux/arm64/$(EXECUTABLE)
-
-build_linux_arm:
-	CGO_ENABLED=0 GOOS=linux GOARCH=arm GOARM=7 $(GO) build -a -tags '$(TAGS)' -ldflags '$(EXTLDFLAGS)-s -w $(LDFLAGS)' -o release/linux/arm/$(EXECUTABLE)
 
 coverage:
 	sed -i '/main.go/d' coverage.txt
 
-.PHONY: deps-backend
-deps-backend:
-	$(GO) mod download
-	$(GO) install $(GXZ_PAGAGE)
-	$(GO) install $(XGO_PACKAGE)
-
-.PHONY: release
-release: release-linux release-darwin release-windows release-copy release-compress release-check
-
-$(DIST_DIRS):
-	mkdir -p $(DIST_DIRS)
-
-.PHONY: release-windows
-release-windows: | $(DIST_DIRS)
-	CGO_CFLAGS="$(CGO_CFLAGS)" $(GO) run $(XGO_PACKAGE) -go $(XGO_VERSION) -buildmode exe -dest $(DIST)/binaries -tags 'netgo osusergo $(TAGS)' -ldflags '-linkmode external -extldflags "-static" $(LDFLAGS)' -targets '$(WINDOWS_ARCHS)' -out $(EXECUTABLE)-$(VERSION) .
-ifeq ($(CI),true)
-	cp -r /build/* $(DIST)/binaries/
-endif
-
-.PHONY: release-linux
-release-linux: | $(DIST_DIRS)
-	CGO_CFLAGS="$(CGO_CFLAGS)" $(GO) run $(XGO_PACKAGE) -go $(XGO_VERSION) -dest $(DIST)/binaries -tags 'netgo osusergo $(TAGS)' -ldflags '-linkmode external -extldflags "-static" $(LDFLAGS)' -targets '$(LINUX_ARCHS)' -out $(EXECUTABLE)-$(VERSION) .
-ifeq ($(CI),true)
-	cp -r /build/* $(DIST)/binaries/
-endif
-
-.PHONY: release-darwin
-release-darwin: | $(DIST_DIRS)
-	CGO_CFLAGS="$(CGO_CFLAGS)" $(GO) run $(XGO_PACKAGE) -go $(XGO_VERSION) -dest $(DIST)/binaries -tags 'netgo osusergo $(TAGS)' -ldflags '$(LDFLAGS)' -targets '$(DARWIN_ARCHS)' -out $(EXECUTABLE)-$(VERSION) .
-ifeq ($(CI),true)
-	cp -r /build/* $(DIST)/binaries/
-endif
-
-.PHONY: release-copy
-release-copy: | $(DIST_DIRS)
-	cd $(DIST); for file in `find . -type f -name "*"`; do cp $${file} ./release/; done;
-
-.PHONY: release-check
-release-check: | $(DIST_DIRS)
-	cd $(DIST)/release/; for file in `find . -type f -name "*"`; do echo "checksumming $${file}" && $(SHASUM) `echo $${file} | sed 's/^..//'` > $${file}.sha256; done;
-
-.PHONY: release-compress
-release-compress: | $(DIST_DIRS)
-	cd $(DIST)/release/; for file in `find . -type f -name "*"`; do echo "compressing $${file}" && $(GO) run $(GXZ_PAGAGE) -k -9 $${file}; done;
-
 clean:
 	$(GO) clean -x -i ./...
-	rm -rf coverage.txt $(EXECUTABLE) $(DIST)
+	rm -rf coverage.txt $(EXECUTABLE)
 
 version:
 	@echo $(VERSION)
