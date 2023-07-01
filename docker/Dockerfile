@@ -12,7 +12,7 @@ LABEL org.opencontainers.image.source=https://github.com/appleboy/drone-git-push
 LABEL org.opencontainers.image.description="Drone Git Push"
 LABEL org.opencontainers.image.licenses=MIT
 
-RUN apk add --no-cache ca-certificates=20230506-r0 git=2.38.5-r0 openssh=9.1_p1-r2 curl=8.0.1-r0 perl=5.36.0-r1 && \
+RUN apk add --no-cache ca-certificates git openssh curl perl && \
   rm -rf /var/cache/apk/*
 
 COPY release/${TARGETOS}/${TARGETARCH}/drone-git-push /bin/
