@@ -135,7 +135,7 @@ func main() {
 		&cli.BoolFlag{
 			Name:    "rebase",
 			Usage:   "pull rebase branch before push",
-			EnvVars: []string{"PLUGIN_REBASE", "GIT_PUSH_REBASE"},
+			EnvVars: []string{"PLUGIN_REBASE", "GIT_PUSH_REBASE", "INPUT_REBASE"},
 		},
 	}
 
