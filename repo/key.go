@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
+	"strings"
 )
 
 const netrcFile = `
@@ -18,6 +19,11 @@ password %s
 func WriteKey(privateKey string) error {
 	if privateKey == "" {
 		return nil
+	}
+
+	// make sure key ends with newline
+	if !strings.HasSuffix(privateKey, "\n") {
+		privateKey += "\n"
 	}
 
 	home := "/root"
