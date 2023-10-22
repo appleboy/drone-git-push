@@ -55,7 +55,7 @@ An example of specifying the path to a repo:
 
 | setting        | description
 |----------------|--------------
-| ssh_key        | private SSH key for the remote machine
+| ssh_key        | private SSH key for the remote machine (make sure it ends with a newline)
 | remote         | target remote repository (if blank, assume exists)
 | remote_name    | name of the remote to use locally (default "deploy")
 | branch         | target remote branch, defaults to master
