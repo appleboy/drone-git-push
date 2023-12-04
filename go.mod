@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/appleboy/com v0.1.7
 	github.com/joho/godotenv v1.5.1
-	github.com/urfave/cli/v2 v2.25.7
+	github.com/urfave/cli/v2 v2.26.0
 )
 
 require (
