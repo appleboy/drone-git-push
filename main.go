@@ -36,12 +36,12 @@ func main() {
 		&cli.StringFlag{
 			Name:    "commit.author.name",
 			Usage:   "git author name",
-			EnvVars: []string{"PLUGIN_AUTHOR_NAME", "DRONE_COMMIT_AUTHOR", "INPUT_AUTHOR_NAME"},
+			EnvVars: []string{"PLUGIN_AUTHOR_NAME", "DRONE_COMMIT_AUTHOR", "CI_COMMIT_AUTHOR", "INPUT_AUTHOR_NAME"},
 		},
 		&cli.StringFlag{
 			Name:    "commit.author.email",
 			Usage:   "git author email",
-			EnvVars: []string{"PLUGIN_AUTHOR_EMAIL", "DRONE_COMMIT_AUTHOR_EMAIL", "INPUT_AUTHOR_EMAIL"},
+			EnvVars: []string{"PLUGIN_AUTHOR_EMAIL", "DRONE_COMMIT_AUTHOR_EMAIL", "CI_COMMIT_AUTHOR_EMAIL", "INPUT_AUTHOR_EMAIL"},
 		},
 
 		&cli.StringFlag{
