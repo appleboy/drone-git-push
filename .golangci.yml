@@ -1,0 +1,41 @@
+run:
+  timeout: 5m
+linters:
+  enable:
+    - asciicheck
+    - dogsled
+    - durationcheck
+    - errcheck
+    - errorlint
+    - exportloopref
+    - gci
+    - gofmt
+    - goimports
+    - gosec
+    - misspell
+    - nakedret
+    - nilerr
+    - perfsprint
+    - revive
+    - testifylint
+    - usestdlibvars
+    - wastedassign
+
+linters-settings:
+  gosec:
+    # To select a subset of rules to run.
+    # Available rules: https://github.com/securego/gosec#available-rules
+    # Default: [] - means include all rules
+    includes: []
+    # To exclude a subset of rules from running.
+    # Default: [] - means exclude no rules
+    excludes:
+      - G402
+  perfsprint:
+    err-error: true
+    errorf: true
+    int-conversion: true
+    sprintf1: true
+    strconcat: true
+  testifylint:
+    enable-all: true
