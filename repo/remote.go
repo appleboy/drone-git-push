@@ -2,6 +2,7 @@ package repo
 
 import (
 	"os/exec"
+	"regexp"
 )
 
 // RemoteRemove drops the defined remote from a git repo.
@@ -43,13 +44,31 @@ func RemotePullRebaseNamedBranch(remote, branch string) *exec.Cmd {
 	return cmd
 }
 
+var validBranchName = regexp.MustCompile(`^[\w\.\-\/]+$`)
+
+func sanitizeInput(input string) string {
+	if isValidInput(input) {
+		return input
+	}
+	return ""
+}
+
+func isValidInput(input string) bool {
+	return validBranchName.MatchString(input)
+}
+
 // RemotePushNamedBranch puchs changes from a local to a remote branch.
 func RemotePushNamedBranch(remote, localbranch string, branch string, force bool, followtags bool) *exec.Cmd {
+	sanitizedRemote := sanitizeInput(remote)
+	sanitizedLocalBranch := sanitizeInput(localbranch)
+	sanitizedBranch := sanitizeInput(branch)
+
 	cmd := exec.Command(
 		"git",
 		"push",
-		remote,
-		localbranch+":"+branch)
+		sanitizedRemote,
+		sanitizedLocalBranch+":"+sanitizedBranch,
+	)
 
 	if force {
 		cmd.Args = append(

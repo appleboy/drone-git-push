@@ -45,7 +45,7 @@ func WriteKey(privateKey string) error {
 	_ = os.WriteFile(
 		confpath,
 		[]byte("StrictHostKeyChecking no\n"),
-		0o700)
+		0o600)
 
 	return os.WriteFile(
 		privpath,
