@@ -1,5 +1,7 @@
 # drone-git-push
 
+[繁體中文](README.zh-tw.md) | [简体中文](README.zh-cn.md)
+
 [![GoDoc](https://godoc.org/github.com/appleboy/drone-git-push?status.svg)](https://godoc.org/github.com/appleboy/drone-git-push)
 [![Lint and Testing](https://github.com/appleboy/drone-git-push/actions/workflows/lint.yml/badge.svg)](https://github.com/appleboy/drone-git-push/actions/workflows/lint.yml)
 [![codecov](https://codecov.io/gh/appleboy/drone-git-push/branch/master/graph/badge.svg)](https://codecov.io/gh/appleboy/drone-git-push)
