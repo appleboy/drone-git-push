@@ -161,6 +161,11 @@ func main() {
 			Usage:   "pull rebase branch before push",
 			EnvVars: []string{"PLUGIN_REBASE", "GIT_PUSH_REBASE", "INPUT_REBASE"},
 		},
+		&cli.BoolFlag{
+			Name:    "mirror",
+			Usage:   "push all refs to remote repository with --mirror",
+			EnvVars: []string{"PLUGIN_MIRROR", "GIT_PUSH_MIRROR", "INPUT_MIRROR"},
+		},
 	}
 
 	if err := app.Run(os.Args); err != nil {
@@ -197,6 +202,7 @@ func run(c *cli.Context) error {
 			EmptyCommit:   c.Bool("empty-commit"),
 			NoVerify:      c.Bool("no-verify"),
 			Rebase:        c.Bool("rebase"),
+			Mirror:        c.Bool("mirror"),
 		},
 	}
 

@@ -43,6 +43,7 @@ type (
 		EmptyCommit   bool
 		NoVerify      bool
 		Rebase        bool
+		Mirror        bool
 	}
 
 	// Plugin Structure
@@ -206,6 +207,10 @@ func (p Plugin) HandleTag(ctx context.Context) error {
 
 // HandlePush pushs the changes to the remote repo.
 func (p Plugin) HandlePush(ctx context.Context) error {
+	if p.Config.Mirror {
+		return execute(repo.RemotePushMirror(ctx, p.Config.RemoteName))
+	}
+
 	var (
 		name       = p.Config.RemoteName
 		local      = p.Config.LocalBranch

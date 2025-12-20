@@ -46,3 +46,17 @@ docker run --rm \
   -w "$(pwd)" \
   appleboy/drone-git-push
 ```
+
+Mirror all refs to a remote repository:
+
+```sh
+docker run --rm \
+  -e DRONE_COMMIT_AUTHOR=Octocat \
+  -e DRONE_COMMIT_AUTHOR_EMAIL=octocat@github.com \
+  -e PLUGIN_SSH_KEY="$(cat "${HOME}/.ssh/id_rsa")" \
+  -e PLUGIN_REMOTE=git@github.com:foo/bar.git \
+  -e PLUGIN_MIRROR=true \
+  -v "$(pwd):$(pwd)" \
+  -w "$(pwd)" \
+  appleboy/drone-git-push
+```
