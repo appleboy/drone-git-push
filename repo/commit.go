@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"context"
 	"fmt"
 	"os/exec"
 )
@@ -8,8 +9,9 @@ import (
 const defaultCommitMessage = "[skip ci] Commit dirty state"
 
 // ForceAdd forces the addition of all dirty files.
-func ForceAdd() *exec.Cmd {
-	cmd := exec.Command(
+func ForceAdd(ctx context.Context) *exec.Cmd {
+	cmd := exec.CommandContext(
+		ctx,
 		"git",
 		"add",
 		"--all",
@@ -19,8 +21,9 @@ func ForceAdd() *exec.Cmd {
 }
 
 // Add updates the index to match the working tree.
-func Add() *exec.Cmd {
-	cmd := exec.Command(
+func Add(ctx context.Context) *exec.Cmd {
+	cmd := exec.CommandContext(
+		ctx,
 		"git",
 		"add",
 		"--all")
@@ -29,8 +32,9 @@ func Add() *exec.Cmd {
 }
 
 // Tag add tag to the working tree.
-func Tag(tag string) *exec.Cmd {
-	cmd := exec.Command(
+func Tag(ctx context.Context, tag string) *exec.Cmd {
+	cmd := exec.CommandContext(
+		ctx,
 		"git",
 		"tag",
 		"-a",
@@ -42,8 +46,9 @@ func Tag(tag string) *exec.Cmd {
 }
 
 // TestCleanTree returns non-zero if diff between index and local repository
-func TestCleanTree() *exec.Cmd {
-	cmd := exec.Command(
+func TestCleanTree(ctx context.Context) *exec.Cmd {
+	cmd := exec.CommandContext(
+		ctx,
 		"git",
 		"diff-index",
 		"--quiet",
@@ -54,12 +59,18 @@ func TestCleanTree() *exec.Cmd {
 }
 
 // EmptyCommit simply create an empty commit
-func EmptyCommit(msg string, noVerify bool, authorName, authorEmail string) *exec.Cmd {
+func EmptyCommit(
+	ctx context.Context,
+	msg string,
+	noVerify bool,
+	authorName, authorEmail string,
+) *exec.Cmd {
 	if msg == "" {
 		msg = defaultCommitMessage
 	}
 
-	cmd := exec.Command(
+	cmd := exec.CommandContext(
+		ctx,
 		"git",
 		"commit",
 		"--allow-empty",
@@ -83,12 +94,18 @@ func EmptyCommit(msg string, noVerify bool, authorName, authorEmail string) *exe
 }
 
 // ForceCommit commits every change while skipping CI.
-func ForceCommit(msg string, noVerify bool, authorName, authorEmail string) *exec.Cmd {
+func ForceCommit(
+	ctx context.Context,
+	msg string,
+	noVerify bool,
+	authorName, authorEmail string,
+) *exec.Cmd {
 	if msg == "" {
 		msg = defaultCommitMessage
 	}
 
-	cmd := exec.Command(
+	cmd := exec.CommandContext(
+		ctx,
 		"git",
 		"commit",
 		"-m",

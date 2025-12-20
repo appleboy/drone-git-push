@@ -8,25 +8,23 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       - name: Setup go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
-          go-version-file: go.mod
-          check-latest: true
+          go-version: "stable"
+      - name: Checkout repository
+        uses: actions/checkout@v6
 
       - name: Setup golangci-lint
-        uses: golangci/golangci-lint-action@v6
+        uses: golangci/golangci-lint-action@v9
         with:
-          version: latest
+          version: v2.7
           args: --verbose
 
-      - uses: hadolint/hadolint-action@v3.1.0
+      - uses: hadolint/hadolint-action@v3.3.0
         name: hadolint for Dockerfile
         with:
-          dockerfile: docker/Dockerfile
+          dockerfile: Dockerfile
 
   testing:
     runs-on: ubuntu-latest

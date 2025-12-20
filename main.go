@@ -204,5 +204,5 @@ func run(c *cli.Context) error {
 		plugin.Config.RemoteName = random.String(10)
 	}
 
-	return plugin.Exec()
+	return plugin.Exec(c.Context)
 }

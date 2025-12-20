@@ -1,13 +1,15 @@
 package repo
 
 import (
+	"context"
 	"os/exec"
 	"regexp"
 )
 
 // RemoteRemove drops the defined remote from a git repo.
-func RemoteRemove(name string) *exec.Cmd {
-	cmd := exec.Command(
+func RemoteRemove(ctx context.Context, name string) *exec.Cmd {
+	cmd := exec.CommandContext(
+		ctx,
 		"git",
 		"remote",
 		"rm",
@@ -17,8 +19,9 @@ func RemoteRemove(name string) *exec.Cmd {
 }
 
 // RemoteAdd adds an additional remote to a git repo.
-func RemoteAdd(name, url string) *exec.Cmd {
-	cmd := exec.Command(
+func RemoteAdd(ctx context.Context, name, url string) *exec.Cmd {
+	cmd := exec.CommandContext(
+		ctx,
 		"git",
 		"remote",
 		"add",
@@ -29,12 +32,13 @@ func RemoteAdd(name, url string) *exec.Cmd {
 }
 
 // RemotePush pushs the changes from the local head to a remote branch..
-func RemotePush(remote, branch string, force, followtags bool) *exec.Cmd {
-	return RemotePushNamedBranch(remote, "HEAD", branch, force, followtags)
+func RemotePush(ctx context.Context, remote, branch string, force, followtags bool) *exec.Cmd {
+	return RemotePushNamedBranch(ctx, remote, "HEAD", branch, force, followtags)
 }
 
-func RemotePullRebaseNamedBranch(remote, branch string) *exec.Cmd {
-	cmd := exec.Command(
+func RemotePullRebaseNamedBranch(ctx context.Context, remote, branch string) *exec.Cmd {
+	cmd := exec.CommandContext(
+		ctx,
 		"git",
 		"pull",
 		"--rebase",
@@ -58,12 +62,17 @@ func isValidInput(input string) bool {
 }
 
 // RemotePushNamedBranch puchs changes from a local to a remote branch.
-func RemotePushNamedBranch(remote, localbranch, branch string, force, followtags bool) *exec.Cmd {
+func RemotePushNamedBranch(
+	ctx context.Context,
+	remote, localbranch, branch string,
+	force, followtags bool,
+) *exec.Cmd {
 	sanitizedRemote := sanitizeInput(remote)
 	sanitizedLocalBranch := sanitizeInput(localbranch)
 	sanitizedBranch := sanitizeInput(branch)
 
-	cmd := exec.Command(
+	cmd := exec.CommandContext(
+		ctx,
 		"git",
 		"push",
 		sanitizedRemote,

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"os"
 
 	"github.com/appleboy/drone-git-push/repo"
@@ -53,12 +54,12 @@ type (
 )
 
 // Exec starts the plugin execution.
-func (p Plugin) Exec() error {
+func (p Plugin) Exec(ctx context.Context) error {
 	if err := p.HandlePath(); err != nil {
 		return err
 	}
 
-	if err := p.WriteConfig(); err != nil {
+	if err := p.WriteConfig(ctx); err != nil {
 		return err
 	}
 
@@ -74,41 +75,41 @@ func (p Plugin) Exec() error {
 		return err
 	}
 
-	if err := p.HandleCommit(); err != nil {
+	if err := p.HandleCommit(ctx); err != nil {
 		return err
 	}
 
-	if err := p.HandleTag(); err != nil {
+	if err := p.HandleTag(ctx); err != nil {
 		return err
 	}
 
-	if err := p.HandleRemote(); err != nil {
+	if err := p.HandleRemote(ctx); err != nil {
 		return err
 	}
 
-	if err := p.HandleRebase(); err != nil {
+	if err := p.HandleRebase(ctx); err != nil {
 		return err
 	}
 
-	if err := p.HandlePush(); err != nil {
+	if err := p.HandlePush(ctx); err != nil {
 		return err
 	}
 
-	return p.HandleCleanup()
+	return p.HandleCleanup(ctx)
 }
 
 // WriteConfig writes all required configurations.
-func (p Plugin) WriteConfig() error {
-	if err := execute(repo.GlobalName(p.Commit.Author.Name)); err != nil {
+func (p Plugin) WriteConfig(ctx context.Context) error {
+	if err := execute(repo.GlobalName(ctx, p.Commit.Author.Name)); err != nil {
 		return err
 	}
 
-	if err := execute(repo.GlobalUser(p.Commit.Author.Email)); err != nil {
+	if err := execute(repo.GlobalUser(ctx, p.Commit.Author.Email)); err != nil {
 		return err
 	}
 
 	if p.Config.SkipVerify {
-		if err := execute(repo.SkipVerify()); err != nil {
+		if err := execute(repo.SkipVerify(ctx)); err != nil {
 			return err
 		}
 	}
@@ -146,9 +147,9 @@ func (p Plugin) WriteToken() error {
 }
 
 // HandleRemote adds the git remote if required.
-func (p Plugin) HandleRemote() error {
+func (p Plugin) HandleRemote(ctx context.Context) error {
 	if p.Config.Remote != "" {
-		if err := execute(repo.RemoteAdd(p.Config.RemoteName, p.Config.Remote)); err != nil {
+		if err := execute(repo.RemoteAdd(ctx, p.Config.RemoteName, p.Config.Remote)); err != nil {
 			return err
 		}
 	}
@@ -168,21 +169,21 @@ func (p Plugin) HandlePath() error {
 }
 
 // HandleCommit commits dirty changes if required.
-func (p Plugin) HandleCommit() error {
+func (p Plugin) HandleCommit(ctx context.Context) error {
 	if p.Config.Commit {
-		if err := execute(repo.Add()); err != nil {
+		if err := execute(repo.Add(ctx)); err != nil {
 			return err
 		}
 
-		if err := execute(repo.TestCleanTree()); err != nil {
+		if err := execute(repo.TestCleanTree(ctx)); err != nil {
 			// changes to commit
-			if err := execute(repo.ForceCommit(p.Config.CommitMessage, p.Config.NoVerify, p.Commit.Author.Name, p.Commit.Author.Email)); err != nil {
+			if err := execute(repo.ForceCommit(ctx, p.Config.CommitMessage, p.Config.NoVerify, p.Commit.Author.Name, p.Commit.Author.Email)); err != nil {
 				return err
 			}
 		} else { // no changes
 			if p.Config.EmptyCommit {
 				// no changes but commit anyway
-				if err := execute(repo.EmptyCommit(p.Config.CommitMessage, p.Config.NoVerify, p.Commit.Author.Name, p.Commit.Author.Email)); err != nil {
+				if err := execute(repo.EmptyCommit(ctx, p.Config.CommitMessage, p.Config.NoVerify, p.Commit.Author.Name, p.Commit.Author.Email)); err != nil {
 					return err
 				}
 			}
@@ -193,9 +194,9 @@ func (p Plugin) HandleCommit() error {
 }
 
 // HandleTag add tag if required.
-func (p Plugin) HandleTag() error {
+func (p Plugin) HandleTag(ctx context.Context) error {
 	if p.Config.Tag != "" {
-		if err := execute(repo.Tag(p.Config.Tag)); err != nil {
+		if err := execute(repo.Tag(ctx, p.Config.Tag)); err != nil {
 			return err
 		}
 	}
@@ -204,7 +205,7 @@ func (p Plugin) HandleTag() error {
 }
 
 // HandlePush pushs the changes to the remote repo.
-func (p Plugin) HandlePush() error {
+func (p Plugin) HandlePush(ctx context.Context) error {
 	var (
 		name       = p.Config.RemoteName
 		local      = p.Config.LocalBranch
@@ -213,18 +214,18 @@ func (p Plugin) HandlePush() error {
 		followtags = p.Config.FollowTags
 	)
 
-	return execute(repo.RemotePushNamedBranch(name, local, branch, force, followtags))
+	return execute(repo.RemotePushNamedBranch(ctx, name, local, branch, force, followtags))
 }
 
 // HanldeRebase pull rebases before pushing
-func (p Plugin) HandleRebase() error {
+func (p Plugin) HandleRebase(ctx context.Context) error {
 	if p.Config.Rebase {
 		var (
 			name   = p.Config.RemoteName
 			branch = p.Config.Branch
 		)
 
-		if err := execute(repo.RemotePullRebaseNamedBranch(name, branch)); err != nil {
+		if err := execute(repo.RemotePullRebaseNamedBranch(ctx, name, branch)); err != nil {
 			return err
 		}
 	}
@@ -233,9 +234,9 @@ func (p Plugin) HandleRebase() error {
 }
 
 // HandleCleanup does eventually do some cleanup.
-func (p Plugin) HandleCleanup() error {
+func (p Plugin) HandleCleanup(ctx context.Context) error {
 	if p.Config.Remote != "" {
-		if err := execute(repo.RemoteRemove(p.Config.RemoteName)); err != nil {
+		if err := execute(repo.RemoteRemove(ctx, p.Config.RemoteName)); err != nil {
 			return err
 		}
 	}

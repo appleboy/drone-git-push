@@ -1,6 +1,9 @@
 package main
 
-import "testing"
+import (
+	"context"
+	"testing"
+)
 
 func TestPlugin_HandleRemote(t *testing.T) {
 	type fields struct {
@@ -31,7 +34,7 @@ func TestPlugin_HandleRemote(t *testing.T) {
 				Commit: tt.fields.Commit,
 				Config: tt.fields.Config,
 			}
-			if err := p.HandleRemote(); (err != nil) != tt.wantErr {
+			if err := p.HandleRemote(context.Background()); (err != nil) != tt.wantErr {
 				t.Errorf("Plugin.HandleRemote() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
