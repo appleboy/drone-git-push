@@ -1,41 +1,63 @@
-run:
-  timeout: 5m
+version: "2"
 linters:
+  default: none
   enable:
-    - asciicheck
+    - bodyclose
     - dogsled
-    - durationcheck
+    - dupl
     - errcheck
-    - errorlint
-    - exportloopref
-    - gci
-    - gofmt
-    - goimports
+    - exhaustive
+    - goconst
+    - gocritic
+    - gocyclo
+    - goprintffuncname
     - gosec
+    - govet
+    - ineffassign
     - misspell
     - nakedret
-    - nilerr
-    - perfsprint
-    - revive
-    - testifylint
-    - usestdlibvars
-    - wastedassign
+    - noctx
+    - nolintlint
+    - rowserrcheck
+    - staticcheck
+    - unconvert
+    - unparam
+    - unused
+    - whitespace
+    - copyloopvar
+    - predeclared
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    paths:
+      - internal/mocks
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - gofmt
+    - gofumpt
+    - goimports
+    - golines
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
 
-linters-settings:
-  gosec:
-    # To select a subset of rules to run.
-    # Available rules: https://github.com/securego/gosec#available-rules
-    # Default: [] - means include all rules
-    includes: []
-    # To exclude a subset of rules from running.
-    # Default: [] - means exclude no rules
-    excludes:
-      - G402
-  perfsprint:
-    err-error: true
-    errorf: true
-    int-conversion: true
-    sprintf1: true
-    strconcat: true
-  testifylint:
-    enable-all: true
+  settings:
+    gofmt:
+      simplify: true
+    gofumpt:
+      # Module path which contains the source code being formatted.
+      # Default: ""
+      module-path: github/appleboy/drone-git-push
+      # Choose whether to use the extra rules.
+      # Default: false
+      extra-rules: true

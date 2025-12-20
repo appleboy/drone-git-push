@@ -83,7 +83,7 @@ func WriteNetrc(machine, login, password string) error {
 }
 
 // WriteToken authenticate with Git hosting using a token.
-func WriteToken(remote string, login, password string) (string, error) {
+func WriteToken(remote, login, password string) (string, error) {
 	if remote == "" || login == "" || password == "" {
 		return remote, nil
 	}

@@ -29,7 +29,7 @@ func RemoteAdd(name, url string) *exec.Cmd {
 }
 
 // RemotePush pushs the changes from the local head to a remote branch..
-func RemotePush(remote, branch string, force bool, followtags bool) *exec.Cmd {
+func RemotePush(remote, branch string, force, followtags bool) *exec.Cmd {
 	return RemotePushNamedBranch(remote, "HEAD", branch, force, followtags)
 }
 
@@ -58,7 +58,7 @@ func isValidInput(input string) bool {
 }
 
 // RemotePushNamedBranch puchs changes from a local to a remote branch.
-func RemotePushNamedBranch(remote, localbranch string, branch string, force bool, followtags bool) *exec.Cmd {
+func RemotePushNamedBranch(remote, localbranch, branch string, force, followtags bool) *exec.Cmd {
 	sanitizedRemote := sanitizeInput(remote)
 	sanitizedLocalBranch := sanitizeInput(localbranch)
 	sanitizedBranch := sanitizeInput(branch)

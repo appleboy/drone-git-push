@@ -34,14 +34,24 @@ func main() {
 	app.Version = Version
 	app.Flags = []cli.Flag{
 		&cli.StringFlag{
-			Name:    "commit.author.name",
-			Usage:   "git author name",
-			EnvVars: []string{"PLUGIN_AUTHOR_NAME", "DRONE_COMMIT_AUTHOR", "CI_COMMIT_AUTHOR", "INPUT_AUTHOR_NAME"},
+			Name:  "commit.author.name",
+			Usage: "git author name",
+			EnvVars: []string{
+				"PLUGIN_AUTHOR_NAME",
+				"DRONE_COMMIT_AUTHOR",
+				"CI_COMMIT_AUTHOR",
+				"INPUT_AUTHOR_NAME",
+			},
 		},
 		&cli.StringFlag{
-			Name:    "commit.author.email",
-			Usage:   "git author email",
-			EnvVars: []string{"PLUGIN_AUTHOR_EMAIL", "DRONE_COMMIT_AUTHOR_EMAIL", "CI_COMMIT_AUTHOR_EMAIL", "INPUT_AUTHOR_EMAIL"},
+			Name:  "commit.author.email",
+			Usage: "git author email",
+			EnvVars: []string{
+				"PLUGIN_AUTHOR_EMAIL",
+				"DRONE_COMMIT_AUTHOR_EMAIL",
+				"CI_COMMIT_AUTHOR_EMAIL",
+				"INPUT_AUTHOR_EMAIL",
+			},
 		},
 
 		&cli.StringFlag{
@@ -50,14 +60,24 @@ func main() {
 			EnvVars: []string{"PLUGIN_NETRC_MACHINE", "DRONE_NETRC_MACHINE", "INPUT_NETRC_MACHINE"},
 		},
 		&cli.StringFlag{
-			Name:    "netrc.username",
-			Usage:   "netrc username",
-			EnvVars: []string{"PLUGIN_USERNAME", "DRONE_NETRC_USERNAME", "GITHUB_USERNAME", "INPUT_USERNAME"},
+			Name:  "netrc.username",
+			Usage: "netrc username",
+			EnvVars: []string{
+				"PLUGIN_USERNAME",
+				"DRONE_NETRC_USERNAME",
+				"GITHUB_USERNAME",
+				"INPUT_USERNAME",
+			},
 		},
 		&cli.StringFlag{
-			Name:    "netrc.password",
-			Usage:   "netrc password",
-			EnvVars: []string{"PLUGIN_PASSWORD", "DRONE_NETRC_PASSWORD", "GITHUB_PASSWORD", "INPUT_PASSWORD"},
+			Name:  "netrc.password",
+			Usage: "netrc password",
+			EnvVars: []string{
+				"PLUGIN_PASSWORD",
+				"DRONE_NETRC_PASSWORD",
+				"GITHUB_PASSWORD",
+				"INPUT_PASSWORD",
+			},
 		},
 		&cli.StringFlag{
 			Name:    "ssh-key",
@@ -113,9 +133,13 @@ func main() {
 			EnvVars: []string{"PLUGIN_COMMIT", "GIT_PUSH_COMMIT", "INPUT_COMMIT"},
 		},
 		&cli.StringFlag{
-			Name:    "commit-message",
-			Usage:   "commit message",
-			EnvVars: []string{"PLUGIN_COMMIT_MESSAGE", "GIT_PUSH_COMMIT_MESSAGE", "INPUT_COMMIT_MESSAGE"},
+			Name:  "commit-message",
+			Usage: "commit message",
+			EnvVars: []string{
+				"PLUGIN_COMMIT_MESSAGE",
+				"GIT_PUSH_COMMIT_MESSAGE",
+				"INPUT_COMMIT_MESSAGE",
+			},
 		},
 		&cli.StringFlag{
 			Name:    "tag",
