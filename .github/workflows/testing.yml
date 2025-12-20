@@ -35,7 +35,7 @@ jobs:
 
       - name: add git make command
         run: |
-          apk add git make curl perl bash build-base zlib-dev ucl-dev
+          apk add git make curl perl bash build-base zlib-dev ucl-dev gpg
 
       - name: testing
         run: |
