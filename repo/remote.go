@@ -93,3 +93,18 @@ func RemotePushNamedBranch(
 
 	return cmd
 }
+
+// RemotePushMirror pushes all refs to remote repository using --mirror.
+func RemotePushMirror(ctx context.Context, remote string) *exec.Cmd {
+	sanitizedRemote := sanitizeInput(remote)
+
+	cmd := exec.CommandContext(
+		ctx,
+		"git",
+		"push",
+		"--mirror",
+		sanitizedRemote,
+	)
+
+	return cmd
+}

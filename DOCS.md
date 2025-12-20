@@ -51,6 +51,18 @@ An example of specifying the path to a repo:
     path: path/to/repo
 ```
 
+An example of mirroring all refs to a remote repository:
+
+```yaml
+- name: mirror push
+  image: appleboy/drone-git-push
+  settings:
+    remote: git@github.com:foo/bar-mirror.git
+    mirror: true
+    ssh_key:
+      from_secret: deploy_key
+```
+
 ## Parameter Reference
 
 | setting        | description
@@ -71,3 +83,4 @@ An example of specifying the path to a repo:
 | author_email   | the email address to use for the author of the commit (if blank, assume push commiter name)
 | followtags     | push with --follow-tags option
 | rebase         | pull --rebase before pushing
+| mirror         | push all refs to remote repository with --mirror, defaults to false
