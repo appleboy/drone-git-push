@@ -15,6 +15,10 @@ LABEL org.opencontainers.image.licenses=MIT
 RUN apk add --no-cache ca-certificates git git-lfs openssh curl perl && \
   rm -rf /var/cache/apk/*
 
+RUN adduser -D -u 1000 appuser
+
 COPY release/${TARGETOS}/${TARGETARCH}/drone-git-push /bin/
+
+USER appuser
 
 ENTRYPOINT ["/bin/drone-git-push"]
