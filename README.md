@@ -9,7 +9,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/appleboy/drone-git-push)](https://goreportcard.com/report/github.com/appleboy/drone-git-push)
 [![Docker Pulls](https://img.shields.io/docker/pulls/appleboy/drone-git-push.svg)](https://hub.docker.com/r/appleboy/drone-git-push/)
 
-A CI/CD plugin for [Drone](https://www.drone.io/), [Woodpecker](https://woodpecker-ci.org/), and [GitHub Actions](https://github.com/features/actions) to push changes to a remote Git repository.
+A CI/CD plugin for [Drone](https://www.drone.io/), [Woodpecker](https://woodpecker-ci.org/), [Crow CI](https://crowci.dev/) and [GitHub Actions](https://github.com/features/actions) to push changes to a remote Git repository.
 
 ## Table of Contents
 
