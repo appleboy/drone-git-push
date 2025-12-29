@@ -17,6 +17,10 @@ RUN apk add --no-cache ca-certificates git git-lfs openssh curl perl && \
 
 RUN adduser -D -u 1000 appuser
 
+# Configure Git to trust all directories to avoid "fatal: not in a git directory" errors
+# This is necessary when running as non-root user in CI/CD environments
+RUN git config --system --add safe.directory '*'
+
 COPY release/${TARGETOS}/${TARGETARCH}/drone-git-push /bin/
 
 USER appuser
