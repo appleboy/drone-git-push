@@ -12,10 +12,11 @@ LABEL org.opencontainers.image.source=https://github.com/appleboy/drone-git-push
 LABEL org.opencontainers.image.description="Drone Git Push"
 LABEL org.opencontainers.image.licenses=MIT
 
+# Install packages, create user, and configure Git
 RUN apk add --no-cache ca-certificates git git-lfs openssh curl perl && \
-  rm -rf /var/cache/apk/*
-
-RUN adduser -D -u 1000 appuser
+  rm -rf /var/cache/apk/* && \
+  adduser -D -u 1000 appuser && \
+  git config --system --add safe.directory '*'
 
 COPY release/${TARGETOS}/${TARGETARCH}/drone-git-push /bin/
 
