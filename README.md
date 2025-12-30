@@ -9,7 +9,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/appleboy/drone-git-push)](https://goreportcard.com/report/github.com/appleboy/drone-git-push)
 [![Docker Pulls](https://img.shields.io/docker/pulls/appleboy/drone-git-push.svg)](https://hub.docker.com/r/appleboy/drone-git-push/)
 
-A CI/CD plugin for [Drone](https://www.drone.io/), [Woodpecker](https://woodpecker-ci.org/), [Crow CI](https://crowci.dev/) and [GitHub Actions](https://github.com/features/actions) to push changes to a remote Git repository.
+A CI/CD plugin for [Drone](https://www.drone.io/), [Woodpecker](https://woodpecker-ci.org/), [Crow CI](https://crowci.dev/), [GitHub Actions](https://github.com/features/actions), and [Gitea Actions](https://docs.gitea.com/usage/actions/overview) to push changes to a remote Git repository.
 
 ## Table of Contents
 
@@ -20,6 +20,7 @@ A CI/CD plugin for [Drone](https://www.drone.io/), [Woodpecker](https://woodpeck
   - [Usage](#usage)
     - [Drone / Woodpecker](#drone--woodpecker)
     - [GitHub Actions](#github-actions)
+    - [Gitea Actions](#gitea-actions)
   - [Parameter Reference](#parameter-reference)
   - [Authentication](#authentication)
     - [SSH Key](#ssh-key)
@@ -47,6 +48,7 @@ A CI/CD plugin for [Drone](https://www.drone.io/), [Woodpecker](https://woodpeck
 | Drone          | Fully supported |
 | Woodpecker     | Fully supported |
 | GitHub Actions | Fully supported |
+| Gitea Actions  | Fully supported |
 
 ## Usage
 
@@ -124,6 +126,17 @@ Push with tagging:
   uses: appleboy/drone-git-push@master
   with:
     remote: git@github.com:foo/bar.git
+    branch: master
+    ssh_key: ${{ secrets.DEPLOY_KEY }}
+```
+
+### Gitea Actions
+
+```yaml
+- name: Push changes
+  uses: appleboy/drone-git-push@master
+  with:
+    remote: git@gitea.com:foo/bar.git
     branch: master
     ssh_key: ${{ secrets.DEPLOY_KEY }}
 ```

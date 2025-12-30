@@ -41,6 +41,7 @@ func main() {
 				"DRONE_COMMIT_AUTHOR",
 				"CI_COMMIT_AUTHOR",
 				"INPUT_AUTHOR_NAME",
+				"GITEA_ACTOR",
 			},
 		},
 		&cli.StringFlag{
@@ -51,6 +52,7 @@ func main() {
 				"DRONE_COMMIT_AUTHOR_EMAIL",
 				"CI_COMMIT_AUTHOR_EMAIL",
 				"INPUT_AUTHOR_EMAIL",
+				"GITEA_ACTOR_EMAIL",
 			},
 		},
 
@@ -67,6 +69,7 @@ func main() {
 				"DRONE_NETRC_USERNAME",
 				"GITHUB_USERNAME",
 				"INPUT_USERNAME",
+				"GITEA_USERNAME",
 			},
 		},
 		&cli.StringFlag{
@@ -77,6 +80,7 @@ func main() {
 				"DRONE_NETRC_PASSWORD",
 				"GITHUB_PASSWORD",
 				"INPUT_PASSWORD",
+				"GITEA_PASSWORD",
 			},
 		},
 		&cli.StringFlag{

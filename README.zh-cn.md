@@ -9,7 +9,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/appleboy/drone-git-push)](https://goreportcard.com/report/github.com/appleboy/drone-git-push)
 [![Docker Pulls](https://img.shields.io/docker/pulls/appleboy/drone-git-push.svg)](https://hub.docker.com/r/appleboy/drone-git-push/)
 
-支持 [Drone](https://www.drone.io/)、[Woodpecker](https://woodpecker-ci.org/) 和 [GitHub Actions](https://github.com/features/actions) 的 CI/CD 插件，用于将更改推送到远程 Git 仓库。
+支持 [Drone](https://www.drone.io/)、[Woodpecker](https://woodpecker-ci.org/)、[GitHub Actions](https://github.com/features/actions) 和 [Gitea Actions](https://docs.gitea.com/usage/actions/overview) 的 CI/CD 插件，用于将更改推送到远程 Git 仓库。
 
 ## 目录
 
@@ -20,6 +20,7 @@
   - [使用方式](#使用方式)
     - [Drone / Woodpecker](#drone--woodpecker)
     - [GitHub Actions](#github-actions)
+    - [Gitea Actions](#gitea-actions)
   - [参数说明](#参数说明)
   - [认证方式](#认证方式)
     - [SSH 密钥](#ssh-密钥)
@@ -47,6 +48,7 @@
 | Drone          | 完整支持 |
 | Woodpecker     | 完整支持 |
 | GitHub Actions | 完整支持 |
+| Gitea Actions  | 完整支持 |
 
 ## 使用方式
 
@@ -124,6 +126,17 @@
   uses: appleboy/drone-git-push@master
   with:
     remote: git@github.com:foo/bar.git
+    branch: master
+    ssh_key: ${{ secrets.DEPLOY_KEY }}
+```
+
+### Gitea Actions
+
+```yaml
+- name: Push changes
+  uses: appleboy/drone-git-push@master
+  with:
+    remote: git@gitea.com:foo/bar.git
     branch: master
     ssh_key: ${{ secrets.DEPLOY_KEY }}
 ```
