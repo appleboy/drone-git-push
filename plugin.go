@@ -151,9 +151,12 @@ func (p Plugin) WriteToken() error {
 // If the remote already exists, it updates the URL instead.
 func (p Plugin) HandleRemote(ctx context.Context) error {
 	if p.Config.Remote != "" {
-		if err := execute(repo.RemoteAdd(ctx, p.Config.RemoteName, p.Config.Remote)); err != nil {
-			// If remote already exists, update its URL instead.
+		if repo.RemoteExists(ctx, p.Config.RemoteName) {
 			if err := execute(repo.RemoteSetURL(ctx, p.Config.RemoteName, p.Config.Remote)); err != nil {
+				return err
+			}
+		} else {
+			if err := execute(repo.RemoteAdd(ctx, p.Config.RemoteName, p.Config.Remote)); err != nil {
 				return err
 			}
 		}
