@@ -56,22 +56,21 @@ func TestPlugin_HandleRemote_ExistingRemote(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer os.Chdir(origDir)
+	defer func() {
+		_ = os.Chdir(origDir)
+	}()
 
 	if err := os.Chdir(tmpDir); err != nil {
 		t.Fatal(err)
 	}
 
 	// Initialize a git repo and add a remote
-	cmds := [][]string{
-		{"git", "init"},
-		{"git", "remote", "add", "origin", "git@github.com:old/repo.git"},
+	ctx := context.Background()
+	if out, err := exec.CommandContext(ctx, "git", "init").CombinedOutput(); err != nil { //nolint:gosec
+		t.Fatalf("git init failed: %s, %v", out, err)
 	}
-	for _, args := range cmds {
-		cmd := exec.Command(args[0], args[1:]...)
-		if out, err := cmd.CombinedOutput(); err != nil {
-			t.Fatalf("command %v failed: %s, %v", args, out, err)
-		}
+	if out, err := exec.CommandContext(ctx, "git", "remote", "add", "origin", "git@github.com:old/repo.git").CombinedOutput(); err != nil { //nolint:gosec
+		t.Fatalf("git remote add failed: %s, %v", out, err)
 	}
 
 	// HandleRemote should succeed even though "origin" already exists
@@ -81,12 +80,12 @@ func TestPlugin_HandleRemote_ExistingRemote(t *testing.T) {
 			Remote:     "git@github.com:new/repo.git",
 		},
 	}
-	if err := p.HandleRemote(context.Background()); err != nil {
+	if err := p.HandleRemote(ctx); err != nil {
 		t.Errorf("HandleRemote() with existing remote should not fail, got: %v", err)
 	}
 
 	// Verify the remote URL was updated
-	out, err := exec.Command("git", "remote", "get-url", "origin").Output()
+	out, err := exec.CommandContext(ctx, "git", "remote", "get-url", "origin").Output() //nolint:gosec
 	if err != nil {
 		t.Fatal(err)
 	}
