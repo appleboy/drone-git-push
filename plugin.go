@@ -152,11 +152,13 @@ func (p Plugin) WriteToken() error {
 func (p Plugin) HandleRemote(ctx context.Context) error {
 	if p.Config.Remote != "" {
 		if repo.RemoteExists(ctx, p.Config.RemoteName) {
-			if err := execute(repo.RemoteSetURL(ctx, p.Config.RemoteName, p.Config.Remote)); err != nil {
+			cmd := repo.RemoteSetURL(ctx, p.Config.RemoteName, p.Config.Remote)
+			if err := execute(cmd); err != nil {
 				return err
 			}
 		} else {
-			if err := execute(repo.RemoteAdd(ctx, p.Config.RemoteName, p.Config.Remote)); err != nil {
+			cmd := repo.RemoteAdd(ctx, p.Config.RemoteName, p.Config.Remote)
+			if err := execute(cmd); err != nil {
 				return err
 			}
 		}

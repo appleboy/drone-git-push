@@ -66,10 +66,15 @@ func TestPlugin_HandleRemote_ExistingRemote(t *testing.T) {
 
 	// Initialize a git repo and add a remote
 	ctx := context.Background()
-	if out, err := exec.CommandContext(ctx, "git", "init").CombinedOutput(); err != nil { //nolint:gosec
+	if out, err := exec.CommandContext(
+		ctx, "git", "init",
+	).CombinedOutput(); err != nil {
 		t.Fatalf("git init failed: %s, %v", out, err)
 	}
-	if out, err := exec.CommandContext(ctx, "git", "remote", "add", "origin", "git@github.com:old/repo.git").CombinedOutput(); err != nil { //nolint:gosec
+	if out, err := exec.CommandContext(
+		ctx, "git", "remote", "add", "origin",
+		"git@github.com:old/repo.git",
+	).CombinedOutput(); err != nil {
 		t.Fatalf("git remote add failed: %s, %v", out, err)
 	}
 
@@ -85,7 +90,9 @@ func TestPlugin_HandleRemote_ExistingRemote(t *testing.T) {
 	}
 
 	// Verify the remote URL was updated
-	out, err := exec.CommandContext(ctx, "git", "remote", "get-url", "origin").Output() //nolint:gosec
+	out, err := exec.CommandContext(
+		ctx, "git", "remote", "get-url", "origin",
+	).Output()
 	if err != nil {
 		t.Fatal(err)
 	}
