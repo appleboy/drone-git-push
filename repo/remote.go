@@ -31,6 +31,19 @@ func RemoteAdd(ctx context.Context, name, url string) *exec.Cmd {
 	return cmd
 }
 
+// RemoteSetURL updates the URL of an existing remote in a git repo.
+func RemoteSetURL(ctx context.Context, name, url string) *exec.Cmd {
+	cmd := exec.CommandContext(
+		ctx,
+		"git",
+		"remote",
+		"set-url",
+		name,
+		url)
+
+	return cmd
+}
+
 // RemotePush pushs the changes from the local head to a remote branch..
 func RemotePush(ctx context.Context, remote, branch string, force, followtags bool) *exec.Cmd {
 	return RemotePushNamedBranch(ctx, remote, "HEAD", branch, force, followtags)

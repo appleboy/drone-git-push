@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"context"
 	"testing"
 )
 
@@ -43,5 +44,19 @@ func TestSanitizeInput(t *testing.T) {
 				t.Errorf("sanitizeInput() = %v, want %v", got, tt.want)
 			}
 		})
+	}
+}
+
+func TestRemoteSetURL(t *testing.T) {
+	cmd := RemoteSetURL(context.Background(), "origin", "git@github.com:user/repo.git")
+	args := cmd.Args
+	expected := []string{"git", "remote", "set-url", "origin", "git@github.com:user/repo.git"}
+	if len(args) != len(expected) {
+		t.Fatalf("expected %d args, got %d", len(expected), len(args))
+	}
+	for i, arg := range args {
+		if arg != expected[i] {
+			t.Errorf("arg[%d] = %q, want %q", i, arg, expected[i])
+		}
 	}
 }

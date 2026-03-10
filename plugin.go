@@ -148,10 +148,14 @@ func (p Plugin) WriteToken() error {
 }
 
 // HandleRemote adds the git remote if required.
+// If the remote already exists, it updates the URL instead.
 func (p Plugin) HandleRemote(ctx context.Context) error {
 	if p.Config.Remote != "" {
 		if err := execute(repo.RemoteAdd(ctx, p.Config.RemoteName, p.Config.Remote)); err != nil {
-			return err
+			// If remote already exists, update its URL instead.
+			if err := execute(repo.RemoteSetURL(ctx, p.Config.RemoteName, p.Config.Remote)); err != nil {
+				return err
+			}
 		}
 	}
 
