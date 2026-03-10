@@ -18,6 +18,17 @@ func RemoteRemove(ctx context.Context, name string) *exec.Cmd {
 	return cmd
 }
 
+// RemoteExists checks if a named remote already exists in a git repo.
+func RemoteExists(ctx context.Context, name string) bool {
+	cmd := exec.CommandContext(
+		ctx,
+		"git",
+		"remote",
+		"get-url",
+		name)
+	return cmd.Run() == nil
+}
+
 // RemoteAdd adds an additional remote to a git repo.
 func RemoteAdd(ctx context.Context, name, url string) *exec.Cmd {
 	cmd := exec.CommandContext(
@@ -25,6 +36,19 @@ func RemoteAdd(ctx context.Context, name, url string) *exec.Cmd {
 		"git",
 		"remote",
 		"add",
+		name,
+		url)
+
+	return cmd
+}
+
+// RemoteSetURL updates the URL of an existing remote in a git repo.
+func RemoteSetURL(ctx context.Context, name, url string) *exec.Cmd {
+	cmd := exec.CommandContext(
+		ctx,
+		"git",
+		"remote",
+		"set-url",
 		name,
 		url)
 
