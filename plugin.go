@@ -187,13 +187,29 @@ func (p Plugin) HandleCommit(ctx context.Context) error {
 
 		if err := execute(repo.TestCleanTree(ctx)); err != nil {
 			// changes to commit
-			if err := execute(repo.ForceCommit(ctx, p.Config.CommitMessage, p.Config.NoVerify, p.Commit.Author.Name, p.Commit.Author.Email)); err != nil {
+			if err := execute(
+				repo.ForceCommit(
+					ctx,
+					p.Config.CommitMessage,
+					p.Config.NoVerify,
+					p.Commit.Author.Name,
+					p.Commit.Author.Email,
+				),
+			); err != nil {
 				return err
 			}
 		} else { // no changes
 			if p.Config.EmptyCommit {
 				// no changes but commit anyway
-				if err := execute(repo.EmptyCommit(ctx, p.Config.CommitMessage, p.Config.NoVerify, p.Commit.Author.Name, p.Commit.Author.Email)); err != nil {
+				if err := execute(
+					repo.EmptyCommit(
+						ctx,
+						p.Config.CommitMessage,
+						p.Config.NoVerify,
+						p.Commit.Author.Name,
+						p.Commit.Author.Email,
+					),
+				); err != nil {
 					return err
 				}
 			}
