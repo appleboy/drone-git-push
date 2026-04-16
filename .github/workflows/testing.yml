@@ -12,6 +12,7 @@ jobs:
         uses: actions/setup-go@v6
         with:
           go-version: "stable"
+          check-latest: true
       - name: Checkout repository
         uses: actions/checkout@v6
 
