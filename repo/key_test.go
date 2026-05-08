@@ -2,6 +2,12 @@ package repo
 
 import "testing"
 
+const (
+	testLogin    = "foo"
+	testPassword = "bar"
+	testHTTPSURL = "https://github.com/foo/bar.git"
+)
+
 func TestWriteToken(t *testing.T) {
 	type args struct {
 		remote   string
@@ -18,8 +24,8 @@ func TestWriteToken(t *testing.T) {
 			name: "don't support git protocol",
 			args: args{
 				remote:   "git@github.com:foo/bar.git",
-				login:    "foo",
-				password: "bar",
+				login:    testLogin,
+				password: testPassword,
 			},
 			want:    "git@github.com:foo/bar.git",
 			wantErr: true,
@@ -27,18 +33,18 @@ func TestWriteToken(t *testing.T) {
 		{
 			name: "missing token",
 			args: args{
-				remote: "https://github.com/foo/bar.git",
-				login:  "foo",
+				remote: testHTTPSURL,
+				login:  testLogin,
 			},
-			want:    "https://github.com/foo/bar.git",
+			want:    testHTTPSURL,
 			wantErr: false,
 		},
 		{
 			name: "add token",
 			args: args{
-				remote:   "https://github.com/foo/bar.git",
-				login:    "foo",
-				password: "bar",
+				remote:   testHTTPSURL,
+				login:    testLogin,
+				password: testPassword,
 			},
 			want:    "https://foo:bar@github.com/foo/bar.git",
 			wantErr: false,
