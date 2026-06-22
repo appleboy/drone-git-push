@@ -14,7 +14,7 @@ jobs:
           go-version: "stable"
           check-latest: true
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup golangci-lint
         uses: golangci/golangci-lint-action@v9
@@ -36,7 +36,7 @@ jobs:
       image: golang:${{ matrix.go-version }}-alpine
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: add git make command
         run: |
