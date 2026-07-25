@@ -6,7 +6,6 @@
 [![Lint and Testing](https://github.com/appleboy/drone-git-push/actions/workflows/testing.yml/badge.svg)](https://github.com/appleboy/drone-git-push/actions/workflows/testing.yml)
 [![Trivy Security Scan](https://github.com/appleboy/drone-git-push/actions/workflows/trivy.yml/badge.svg)](https://github.com/appleboy/drone-git-push/actions/workflows/trivy.yml)
 [![codecov](https://codecov.io/gh/appleboy/drone-git-push/branch/master/graph/badge.svg)](https://codecov.io/gh/appleboy/drone-git-push)
-[![Go Report Card](https://goreportcard.com/badge/github.com/appleboy/drone-git-push)](https://goreportcard.com/report/github.com/appleboy/drone-git-push)
 [![Docker Pulls](https://img.shields.io/docker/pulls/appleboy/drone-git-push.svg)](https://hub.docker.com/r/appleboy/drone-git-push/)
 
 A CI/CD plugin for [Drone](https://www.drone.io/), [Woodpecker](https://woodpecker-ci.org/), [Crow CI](https://crowci.dev/), [GitHub Actions](https://github.com/features/actions), and [Gitea Actions](https://docs.gitea.com/usage/actions/overview) to push changes to a remote Git repository.
