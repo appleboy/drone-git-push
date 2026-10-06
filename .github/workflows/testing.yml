@@ -8,13 +8,14 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
       - name: Setup go
         uses: actions/setup-go@v7
         with:
-          go-version: "stable"
+          go-version-file: go.mod
           check-latest: true
-      - name: Checkout repository
-        uses: actions/checkout@v7
 
       - name: Setup golangci-lint
         uses: golangci/golangci-lint-action@v9
