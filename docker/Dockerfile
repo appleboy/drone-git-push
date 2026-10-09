@@ -19,6 +19,6 @@ RUN apk add --no-cache ca-certificates git git-lfs openssh curl perl && \
 
 COPY release/${TARGETOS}/${TARGETARCH}/drone-git-push /bin/
 
-USER appuser
+USER 1000:1000
 
 ENTRYPOINT ["/bin/drone-git-push"]
