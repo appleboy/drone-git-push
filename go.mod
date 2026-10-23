@@ -3,7 +3,7 @@ module github.com/appleboy/drone-git-push
 go 1.26.10
 
 require (
-	github.com/appleboy/com v1.2.1
+	github.com/appleboy/com v1.2.2
 	github.com/joho/godotenv v1.5.1
 	github.com/urfave/cli/v2 v2.27.7
 )
