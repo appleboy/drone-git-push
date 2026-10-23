@@ -1,6 +1,6 @@
 module github.com/appleboy/drone-git-push
 
-go 1.26.9
+go 1.26.10
 
 require (
 	github.com/appleboy/com v1.2.1
