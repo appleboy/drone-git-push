@@ -26,7 +26,7 @@ jobs:
       - name: Check Go formatting
         run: make fmt-check
 
-      - uses: hadolint/hadolint-action@v3.4.0
+      - uses: hadolint/hadolint-action@v3.5.0
         name: hadolint for Dockerfile
         with:
           dockerfile: docker/Dockerfile
