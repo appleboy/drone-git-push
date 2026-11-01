@@ -13,7 +13,8 @@ func RemoteRemove(ctx context.Context, name string) *exec.Cmd {
 		"git",
 		"remote",
 		"rm",
-		name)
+		name,
+	)
 
 	return cmd
 }
@@ -25,7 +26,8 @@ func RemoteExists(ctx context.Context, name string) bool {
 		"git",
 		"remote",
 		"get-url",
-		name)
+		name,
+	)
 	return cmd.Run() == nil
 }
 
@@ -37,7 +39,8 @@ func RemoteAdd(ctx context.Context, name, url string) *exec.Cmd {
 		"remote",
 		"add",
 		name,
-		url)
+		url,
+	)
 
 	return cmd
 }
@@ -50,7 +53,8 @@ func RemoteSetURL(ctx context.Context, name, url string) *exec.Cmd {
 		"remote",
 		"set-url",
 		name,
-		url)
+		url,
+	)
 
 	return cmd
 }
@@ -67,7 +71,8 @@ func RemotePullRebaseNamedBranch(ctx context.Context, remote, branch string) *ex
 		"pull",
 		"--rebase",
 		remote,
-		branch)
+		branch,
+	)
 
 	return cmd
 }
@@ -106,13 +111,15 @@ func RemotePushNamedBranch(
 	if force {
 		cmd.Args = append(
 			cmd.Args,
-			"--force")
+			"--force",
+		)
 	}
 
 	if followtags {
 		cmd.Args = append(
 			cmd.Args,
-			"--follow-tags")
+			"--follow-tags",
+		)
 	}
 
 	return cmd

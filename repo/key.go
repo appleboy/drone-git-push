@@ -28,7 +28,8 @@ func WriteKey(privateKey string) error {
 
 	sshpath := filepath.Join(
 		home,
-		".ssh")
+		".ssh",
+	)
 
 	if err := os.MkdirAll(sshpath, 0o700); err != nil {
 		return err
@@ -36,21 +37,25 @@ func WriteKey(privateKey string) error {
 
 	confpath := filepath.Join(
 		sshpath,
-		"config")
+		"config",
+	)
 
 	privpath := filepath.Join(
 		sshpath,
-		"id_rsa")
+		"id_rsa",
+	)
 
 	_ = os.WriteFile(
 		confpath,
 		[]byte("StrictHostKeyChecking no\n"),
-		0o600)
+		0o600,
+	)
 
 	return os.WriteFile(
 		privpath,
 		[]byte(privateKey),
-		0o600)
+		0o600,
+	)
 }
 
 // WriteNetrc writes the netrc file.
@@ -74,12 +79,14 @@ func WriteNetrc(machine, login, password string) error {
 
 	netpath := filepath.Join(
 		home,
-		".netrc")
+		".netrc",
+	)
 
 	return os.WriteFile(
 		netpath,
 		[]byte(netrcContent),
-		0o600)
+		0o600,
+	)
 }
 
 // WriteToken authenticate with Git hosting using a token.
