@@ -13,7 +13,8 @@ func SkipVerify(ctx context.Context) *exec.Cmd {
 		"config",
 		"--global",
 		"http.sslVerify",
-		"false")
+		"false",
+	)
 
 	return cmd
 }

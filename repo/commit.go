@@ -15,7 +15,8 @@ func ForceAdd(ctx context.Context) *exec.Cmd {
 		"git",
 		"add",
 		"--all",
-		"--force")
+		"--force",
+	)
 
 	return cmd
 }
@@ -26,7 +27,8 @@ func Add(ctx context.Context) *exec.Cmd {
 		ctx,
 		"git",
 		"add",
-		"--all")
+		"--all",
+	)
 
 	return cmd
 }
@@ -40,7 +42,8 @@ func Tag(ctx context.Context, tag string) *exec.Cmd {
 		"-a",
 		tag,
 		"-m",
-		tag)
+		tag,
+	)
 
 	return cmd
 }
@@ -53,7 +56,8 @@ func TestCleanTree(ctx context.Context) *exec.Cmd {
 		"diff-index",
 		"--quiet",
 		"HEAD",
-		"--ignore-submodules")
+		"--ignore-submodules",
+	)
 
 	return cmd
 }
@@ -81,13 +85,15 @@ func EmptyCommit(
 	if noVerify {
 		cmd.Args = append(
 			cmd.Args,
-			"--no-verify")
+			"--no-verify",
+		)
 	}
 
 	if authorName != "" || authorEmail != "" {
 		cmd.Args = append(
 			cmd.Args,
-			fmt.Sprintf("--author=\"%s <%q>\"", authorName, authorEmail))
+			fmt.Sprintf("--author=\"%s <%q>\"", authorName, authorEmail),
+		)
 	}
 
 	return cmd
@@ -115,13 +121,15 @@ func ForceCommit(
 	if noVerify {
 		cmd.Args = append(
 			cmd.Args,
-			"--no-verify")
+			"--no-verify",
+		)
 	}
 
 	if authorName != "" || authorEmail != "" {
 		cmd.Args = append(
 			cmd.Args,
-			fmt.Sprintf("--author=\"%s <%s>\"", authorName, authorEmail))
+			fmt.Sprintf("--author=\"%s <%s>\"", authorName, authorEmail),
+		)
 	}
 
 	return cmd

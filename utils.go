@@ -8,7 +8,11 @@ import (
 )
 
 func execute(cmd *exec.Cmd) error {
-	fmt.Println("+", strings.Join(cmd.Args, " "))
+	//nolint:forbidigo // Preserve the plugin CLI output format on stdout.
+	fmt.Println(
+		"+",
+		strings.Join(cmd.Args, " "),
+	)
 
 	cmd.Env = os.Environ()
 	cmd.Stderr = os.Stderr

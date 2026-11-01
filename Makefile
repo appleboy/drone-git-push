@@ -1,5 +1,6 @@
 EXECUTABLE := drone-git-push
 GO ?= go
+TOOLS_MOD := -modfile=go.tools.mod
 GOFILES := $(shell find . -name "*.go" -type f)
 HAS_GO = $(shell hash $(GO) > /dev/null 2>&1 && echo "GO" || echo "NOGO" )
 
@@ -71,11 +72,11 @@ version: ## Print the version.
 
 .PHONY: lint
 lint: ## Run golangci-lint
-	golangci-lint run -v
+	$(GO) tool $(TOOLS_MOD) golangci-lint run
 
 .PHONY: fmt
 fmt: ## Format code with golangci-lint
-	golangci-lint fmt
+	$(GO) tool $(TOOLS_MOD) golangci-lint fmt
 
 .PHONY: help
 help: ## Print this help message.
@@ -84,3 +85,11 @@ help: ## Print this help message.
 	@echo "Targets:"
 	@echo ""
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
+fmt-check:
+	$(GO) tool $(TOOLS_MOD) golangci-lint fmt --diff --diff-colored=false
+
+install-tools:
+	$(GO) mod download $(TOOLS_MOD)
+
+.PHONY: fmt fmt-check lint install-tools

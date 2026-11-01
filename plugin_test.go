@@ -2,12 +2,15 @@ package main
 
 import (
 	"context"
-	"os"
 	"os/exec"
 	"testing"
 )
 
 func TestPlugin_HandleRemote(t *testing.T) {
+	t.Chdir(t.TempDir())
+	if out, err := exec.CommandContext(t.Context(), "git", "init").CombinedOutput(); err != nil {
+		t.Fatalf("git init failed: %s, %v", out, err)
+	}
 	type fields struct {
 		Netrc  Netrc
 		Commit Commit
@@ -44,25 +47,7 @@ func TestPlugin_HandleRemote(t *testing.T) {
 }
 
 func TestPlugin_HandleRemote_ExistingRemote(t *testing.T) {
-	// Create a temporary git repo
-	tmpDir, err := os.MkdirTemp("", "drone-git-push-test")
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer os.RemoveAll(tmpDir)
-
-	// Save current dir and change to temp dir
-	origDir, err := os.Getwd()
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer func() {
-		_ = os.Chdir(origDir)
-	}()
-
-	if err := os.Chdir(tmpDir); err != nil {
-		t.Fatal(err)
-	}
+	t.Chdir(t.TempDir())
 
 	// Initialize a git repo and add a remote
 	ctx := context.Background()

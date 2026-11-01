@@ -13,7 +13,8 @@ func GlobalUser(ctx context.Context, email string) *exec.Cmd {
 		"config",
 		// "--global",
 		"user.email",
-		email)
+		email,
+	)
 
 	return cmd
 }
@@ -26,7 +27,8 @@ func GlobalName(ctx context.Context, author string) *exec.Cmd {
 		"config",
 		// "--global",
 		"user.name",
-		author)
+		author,
+	)
 
 	return cmd
 }
